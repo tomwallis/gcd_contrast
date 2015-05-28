@@ -1,0 +1,1282 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{fontspec}
+\defaultfontfeatures{Mapping=tex-text}
+\setmainfont{Minion Pro}
+\usepackage[colorlinks=true,citecolor=black]{hyperref}
+\usepackage{setspace}
+\doublespacing
+\usepackage{fullpage}
+\usepackage{authblk}
+\usepackage{float}
+\usepackage[font={small,it}]{caption}
+\usepackage{subcaption}
+\usepackage{lineno}
+
+\usepackage{todonotes}
+
+\newcommand\mitodo[1]{\todo[inline,author=Michael]{#1}}
+\newcommand\mtodo[1]{\todo{Michael: #1}}
+\newcommand\titodo[1]{\todo[inline,author=Tom]{#1}}
+\newcommand\ttodo[1]{\todo{Tom: #1}}
+\newcommand\pitodo[1]{\todo[inline,author=Pete]{#1}}
+\newcommand\ptodo[1]{\todo{Pete: #1}}
+
+\begin{document}
+
+
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+
+\author[1,2,3]{Thomas S A Wallis \thanks{Corresponding author: thomas.wallis@uni-tuebingen.de} \thanks{These authors contributed equally}}
+\author[1,4]{Michael Dorr\samethanks}
+\author[1,5]{Peter J Bex}
+\affil[1]{Schepens Eye Research Institute, Harvard Medical School}
+\affil[2]{School of Psychology, The University of Western Australia}
+\affil[3]{Present address: Department of Computer Science and Werner Reichardt Centre for Integrative Neuroscience, The University of T\"{u}bingen, Germany}
+\affil[4]{Present address: Institute for Human-Machine Communication, Technische Universit\"at M\"unchen, Germany}
+\affil[5]{Present address: Department of Psychology, Northeastern University}
+
+\title{
+Sensitivity to gaze-contingent contrast increments in naturalistic movies: An exploratory report and model comparison
+}
+
+\maketitle
+\bibliographystyle{apalike}
+
+\linenumbers
+
+\abstract{
+Sensitivity to luminance contrast is a prerequisite for all but the most simple visual system.
+To examine contrast increment detection performance in a way that approximates the natural environmental input of the human visual system, we presented contrast increments gaze-contingently within naturalistic video, freely viewed by observers.
+A band-limited contrast increment was applied to a local region of the video relative to the observer's current gaze point, and the observer made a forced-choice response to the location of the target ($\approx 25,000$ trials across five observers).
+We present exploratory analyses showing that performance improved as a function of the magnitude of the increment, and depended on the direction of eye movements relative to the target location, the timing of eye movements relative to target presentation, and the spatiotemporal image structure at the target location.
+Contrast discrimination performance can be modeled by assuming the underlying contrast response is an accelerating nonlinearity (arising from a nonlinear transducer or gain control).
+We implemented one such model and examined the posterior over model parameters, estimated using MCMC. 
+The parameters were poorly constrained by our data; parameters constrained using strong priors taken from previous research showed poor crossvalidated prediction performance.
+Atheoretical logistic regression models were better constrained and provided similar prediction performance to the nonlinear transducer model. 
+Finally, we explored the properties of an extended logistic regression that incorporates both eye movement and image content features.
+Models of contrast transduction may be better constrained by incorporating data from both artificial and natural contrast perception settings.
+}
+
+\newpage
+
+\section{Introduction}
+
+The visual system's encoding of image contrast has been a central focus of vision science for the past 80 years, and much is known about the topic both psychophysically and electrophysiologically.
+The visual system is differentially responsive over a range of spatial and temporal frequencies, giving rise to the spatiotemporal contrast sensitivity function \citep{Kelly1984,Watson2005}.
+This sensitivity profile is supported by the combined activity of channels \citep{Campbell1968,Graham1971,Graham1978,Cannon1991,Watson1997,Meese2005,Haun2010} or neurons \citep{Blakemore1969,Lennie2005,Ringach1997,Goris2009,Goris2013,Kwon2008,HaRu98} that respond to different spatial and temporal frequencies.
+As technologies for stimulus presentation and data analysis have improved, investigators have increasingly used more naturalistic stimuli \citep{Peli1990,Lee2001,Ringach2002,David2004,Mante2005,Geisler2008,
+Geisler2009a,Geisler2009,Freeman2011a,Wang2012a,RuPa12,Wallis2012,Haun2013a,Alam2014} 
+as the visual mechanisms elucidated with simplified stimuli are tested in more ecologically-valid settings.
+
+There is a great deal of evidence that the visual system's response to contrast differs under more naturalistic conditions compared to simple isolated grating stimuli. 
+In any given natural image, the broad distribution of contrast at different spatial scales \citep{Balboa2003,Frazor2006} and orientations means that a population of neurons will each be responding at a different level along their contrast response function \citep{Bex2007,Goris2009,Goris2013}.
+It has been known for some time that these responses are divisively normalised by the activity of nearby channels or neurons, a process called contrast gain control \citep{Morrone1982,Heeger1992,Geisler1992,Foley1994}.
+Here, ``nearby'' refers to neighboring channels in 
+space, 
+frequency,
+and orientation. 
+
+Recent investigations continue to refine this model.
+For example, \citet{Haun2013a} found that to account for perceived contrast in broadband images, lower spatial frequencies needed greater weight in the gain pool than high (see also \citet{Haun2010, Hansen2012}), consistent with the approximately $1/f$ amplitude spectrum slope in natural images.
+\citet{Bex2007} found that the visual system's contrast response at a given spatial scale is moderated by spectral power at remote spatial scales (cross-scale gain control) in broadband natural scenes, and that the inhibitory influence of the gain pool critically depends on spatial alignment over frequencies (phase coherence).
+\citet{Bex2009} showed that when adapted to natural viewing conditions, sensitivity to contrast at low spatial frequencies is lower than when adapted to a homogenous field. 
+This suggests that simple stimuli interleaved with blank screens overestimate contrast sensitivity for natural conditions.
+Furthermore, this study found that detection thresholds were relatively uncorrelated with local RMS contrast; rather, higher local edge density was associated with threshold increases.
+\citet{Sinz2013} showed that including a temporal adaptation component, by which the contrast response normalisation depended on the recent ambient contrast level, provided a more efficient code for the contrasts in natural images (in the redundancy reduction sense). 
+They tested this model by simulating eye movements on a natural image database, producing a distribution of both similar ambient contrasts (caused by microsaccades) and large changes in ambient contrast (caused by saccades).
+Finally, \citet{Alam2014} recently showed that a contrast gain control model similar to that of \citet{Watson1997} predicted detection thresholds for a vertical log-Gabor target embedded in a natural image patch remarkably well.
+Interestingly, the model's predictions were poor in image regions containing identifiable objects (including faces and body parts), suggesting the involvement of additional processing relying on feedback from recognition mechanisms.
+There is therefore scope for continued improvement of contrast encoding models by the use of more natural stimuli and tasks.
+
+Experiments in contrast discrimination almost always use static images and have observers maintain stationary fixation.
+In the real world we make approximately 3 fast eye movements per second \citep[e.g.][]{Heri79,DoMaGeBa10a} and objects in the scene move and are often tracked \citep{Wang2012a}.
+To our knowledge contrast discrimination has never been studied under these conditions, yet as discussed above they may have large influence over key mechanisms.
+We examined human contrast discrimination in natural image sequences (movies) under conditions of free viewing by utilising a recently developed real-time gaze-contingent display system \citep{Dorr2013} to present image modifications that are contingent on the observer's current gaze position.
+The movie was playing without interruption both during and between trials.
+While not a direct analogue of visual behaviour in the real world, this situation is a more realistic way to investigate sensitivity to contrast changes.
+
+Classical investigations of contrast discrimination typically ask observers to discriminate one interval containing a ``pedestal'' contrast level from a second interval containing the pedestal plus an increment \citep{Nachmias1974,Legge1980}.
+In the simplest cases, the pedestal and the increment are both sinusoidal gratings differing only in amplitude, and therefore the task is to indicate which grating had higher contrast.
+Typically, a set of pedestal contrasts would be selected to span the contrast range of interest (including zero contrast, to measure detection) and increment contrasts would be determined either by a method of constant stimuli or using an adaptive procedure to find the threshold increment at each pedestal.
+
+In the present experiment, we incremented the contrast in one spatial band in a local region of the natural image sequence by a multiplicative factor (see Figure \ref{fig:procedure}).
+We therefore rely on the variability of local image contrast \citep[see e.g.][Figure 6]{Bex2009} in our stimuli to generate a distribution of ``pedestal'' contrast samples, which are jointly determined by the content of the video sequence on each frame and the observer's gaze position in the frame.
+Thus, our pedestal levels span a range of contrasts and take on a large number of unique values.
+By multiplying the contrast in the unmodified video we avoid changing the structure of the image at that location, as occurs using alternative stimuli such as phase scrambling \citep{OpLi81,Thomson1999,Vogels1999,BeMa02,SaSi04,WiBrGe06} and spatial distortions \citep{Bex2010,Rovamo1997}, or imposing new structure such as filtered noise, Gabors, or wavelets \citep[e.g.][]{Caelli1986,Eckstein1997,Bex2009,Chandler2009,Alam2014}. 
+This method ensured that we measured sensitivity to structure that was as naturalistic as possible.
+
+The results of this paper are described in three parts.
+Part I (Section \ref{sec:results_I}) presents the experimental method and an exploratory data analysis.
+Part II (Section \ref{sec:results_II}) uses a Bayesian model fitting framework to examine a commonly used nonlinear transducer model of contrast discrimination; we compare this with an atheoretical Generalised Linear Model (logistic regression).
+Part III (Section \ref{sec:results_III}) examines the results of fitting an expanded GLM to the data, combining experimental variables with eye movement and image parameters.
+This section is intended to provide a starting point for future explorations of this data set, which we have made publicly available.
+
+\section{General Methods}
+
+\subsection{Observers}
+
+The data set for the present analysis consisted of five observers (four male; aged 20--45 years), two of the authors plus three experienced psychophysical observers.
+Three additional observers began the experiment but performed relatively few trials due to time constraints; their data has been excluded here in order to reduce the time required to fit the models detailed below.
+Observers wore optical correction if required.
+All procedures were approved by the Institutional Review Board of the Schepens Eye Research Institute, and adhered to the Declaration of Helsinki.
+Observers completed a variable number of trials (shown in Table~\ref{tab:trial_numbers_nas}).
+
+\input{figs/summary_table.tex}
+
+
+\subsection{Stimuli \& Procedure}
+
+Subjects were seated 75~cm from a ViewSonic 3D VX2265wm TFT screen (1680 $\times$ 1050 pixels; 120~Hz refresh rate) with their heads stabilized by a chinrest.
+At a size of 47.5 $\times$ 29.7 cm, the visual angle subtended by the screen was about 35 $\times$ 25 degrees.
+Blu-ray video stimuli (1920 $\times$ 1080 pixels, 23.98 frames per second) were cropped to fit the native display resolution, resulting in a Nyquist frequency of 24 cycles per degree (cpd).
+Rather than explicitly linearising the monitor luminance via a lookup table correction, here we set the monitor gamma to a value of 2.2.
+The professional video material we use as stimuli has been engineered to be viewed at this gamma correction \citep{Poyn03}.
+Since we do not know the gamma of the camera used to record the footage, or the correspondence between the video intensity values and physical scene luminances (furthermore, these likely change between scenes), we argue that it does not make sense to linearise the monitor in our case.
+In the worst case, not doing so may add a small luminance pedestal to our contrast stimuli --- equivalent to adding contrast at a lower spatial scale than our intended target.
+Since luminance and contrast are decoupled in both natural scenes and in their processing by the early visual system \citep{Mante2005}, the scenes vary widely in both luminance and contrast, and the size of the luminance increment is small compared to the contrast increments at high multiplication factors, we do not see that this decision will greatly affect our results.
+
+Eye movements were recorded monocularly using an EyeLink 1000 (SR Research, Ottawa, Canada) eye tracker.
+Before every experiment session, a 13-point calibration procedure was performed followed by a 13-point validation scheme.
+If necessary, these steps were repeated until calibration was accepted by the manufacturer's software.
+
+Each experimental session consisted of a single continuous movie clip.
+All (non-DC) spatial frequency bands of this image sequence were multiplied by 0.75 to achieve a global image contrast of 75\%.
+The unmodified video was shown for a period of 5--7~s at the beginning of a session after calibrating the eyetracker, in order to set the observers' adaptive state \citep{Bex2009}.
+A local contrast increment at one spatial frequency band was introduced in one of four randomly-chosen locations centered $2^\circ$ away from the current gaze position along the cardinal axes (see Figure \ref{fig:procedure}).
+The contrast increment was smoothly transitioned with the underlying movie by masking the target within a spatiotemporal Gaussian envelope.
+The spatial support was 2 $\times$ 2$^\circ$ with a spatial standard deviation of 0.5$^\circ$; the temporal support was 600~ms, with the central 120~ms at maximum amplitude and the first and last 240~ms containing a one-sided Gaussian ramp with temporal standard deviation of 120~ms.
+The amplitude of the contrast increment was determined via a method of constant stimuli, with the band energy of the image at the target patch multiplied by a value between 1.5 and 6.5.
+The base contrast of 75\% ensured that contrast saturation was rare (fewer than 0.5\% of pixels saturated).
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{figs/procedure.pdf}
+\caption{
+Experimental procedure and stimuli.
+\textbf{A:} An image similar in content to the videos used in the experiment (Copyright, Flickr user Phalinn Ooi, released and used here under a CC by 2.0 license).
+\textbf{B:} A depiction of our experimental modifications.
+The global contrast of the image was first reduced (exaggerated here for demonstration).
+Fixation for this demonstration is at the location of the white square.
+The contrast increment could be presented above, right, below or left of fixation (here right, white dashed circle; other possible target locations shown as grey dashed circles) and the subject responded to the location of the target relative to their fovea (4AFC).
+Here the contrast of the image is incremented at a medium spatial scale.
+In the experiment, neither the fixation spot nor the dashed circles were presented.
+\textbf{C:} Depictions of contrast increments at three spatial scales: low (most coarse), medium and high (most fine), along with the unmodified patch. 
+The contrast increment was spatiotemporally blended with the movie so no abrupt edges were created.
+\textbf{D} depicts the blending functions used, alpha represents the multiplication factor that was experimentally varied.
+}
+\label{fig:procedure}
+\end{figure}
+
+
+After the offset of the target, a blue cross (1 $\times$ 1$^\circ$) was presented to the observer's current gaze point to indicate that a trial had just been presented.
+No cue was presented coincident with target onset.
+The cross remained on screen, moving with the observer's gaze, until the observer made a button response to indicate the location of the target (4AFC).
+During this period the movie continued to play.
+After a response, the colour of the fixation cross changed to provide feedback, remaining on screen for 400~ms before disappearing.
+The next trial was initiated with a random delay (1.5--2.5~s) after a response to the previous trial.
+
+Experimental sessions consisted of around 250--300 trials, lasting typically 10--20 minutes.
+Movie stimuli were taken from eight episodes (each $\approx$ 1~hr) of a popular nature documentary.
+Sessions were terminated early if an episode reached its end or if the observer noticed that calibration had shifted (by comparing their gaze position to the fixation cross location).
+The following session was resumed at the previous movie position.
+
+The position of the local contrast modification on the screen was updated with low system latency to ensure gaze-contingent display to within hardware limits.
+The image sequence was decomposed online at 24 frames per second (fps) into a Laplacian pyramid with seven scales \citep{Adelson1981}. To this end, the image
+sequence was first decomposed into a Gaussian pyramid by iteratively filtering with a five-tap binomial filter and subsampling by a factor of two; adjacent
+scales were then subtracted (after upsampling the lower scale by a factor of
+two) from each other to yield an efficient bandpass representation of spatial
+frequency, with individual bands ranging from 0.375 to 24~cpd in log steps.
+Since the lowest level is the DC residual, this yields six band-pass spatial frequency bands. 
+Local modification of one of these pyramid levels before image reconstruction leads to a localised, band-specific change in the reconstructed image.
+To ensure that image processing was completed within one video frame, we implemented it directly on a high-end GPU (NVIDIA Tesla C2070) using the C for graphics shader language \citep{Mark2003}.
+Pyramid decomposition took 3~ms and local target band modification and image reconstruction took 1.5~ms.
+The output latency of the monitor, measured with a photodiode, was about 4~ms.
+The manufacturer-specified latency of the eye tracking system was 1.8~ms.
+Thus, the overall system latency between an eye movement and its effect on the screen was 18.6--26.9~ms at the center of the screen, depending on eye movement onset relative to the screen refresh cycle.
+This latency was accounted for in all analyses (time points refer to physical changes on the screen not the issue time of drawing commands in the computer, which are often confounded in the literature).
+
+
+\subsection{Bayesian modelling framework}
+\label{sec:bayes_method}
+
+In Sections \ref{sec:results_II} and \ref{sec:results_III} we examine the fits of several models by estimating the distribution of posterior probabilities over the model parameter space (i.e. $p(\theta | D)$, where $\theta$ are the parameters in the model and $D$ is the data).
+The posterior distributions also depend on the prior of the parameters $p(\theta)$ and more generally the selected model architecture.
+Compared to maximum likelihood estimation, assessing quantitative models in a Bayesian framework holds a number of advantages, several of which we discuss briefly here.
+First, estimating the parameters of a model from data using maximum likelihood methods produces a point estimate of the model parameters, which can be complimented with confidence regions and correlations based on distributional assumptions or resampling procedures.
+In contrast, the posterior distribution over model parameters provides rich information about the structure of the model and how the parameters relate to one another.
+Second, it allows uncertainty in the parameters to be preserved in all inferences by using multilevel (hierarchical) models, which are easier to estimate within a Bayesian framework than using ML.
+Third, approximating the posterior distribution using sampling methods (see below) is an extremely general approach that offers great flexibility in the types of models that can be estimated efficiently.
+We include further discussion of our model fitting approach in Section \ref{sec:discussion_model_estimation_comparison}.
+
+Since the posterior distributions for these models are not derivable analytically, we approximate them numerically using Markov Chain Monte Carlo (MCMC) methods.
+MCMC methods are algorithms that, after they have converged to an equilibrium distribution, generate samples from probability distributions \citep[see][for a useful introduction]{Kruschke2011a}.
+That is, the probability of the algorithm returning a sample at some point in the space is proportional to that point's probability under the target distribution.
+Highly probable points will be sampled more often.
+In this case, the probability distribution we are sampling is the posterior distribution over the model parameters.
+Properties of the posterior distribution, such as marginal means and variances, can be estimated by taking (for example) the mean of the samples from the MCMC algorithm.
+
+Here we use the Stan modelling language \citep{StanDevelopmentTeam2014} via the rstan package in R \citep{RCoreDevelopmentTeam2013}, which implements a variant of Hamiltonian Monte Carlo (HMC) called the No-U-Turn Sampler \citep[NUTS;][]{Hoffman2014}.
+All models were fit using Stan version 2.2.0.
+Unless otherwise specified, posterior estimates are based on 4 independent chains using the NUTS sampling algorithm \citep{Hoffman2014}, and all results reported in the paper are based on 5000 saved samples.
+Chain convergence was assessed by the $\hat{R}$ value \citep[the ratio of between-to-within chain variance; see][]{Gelman1992} as well as by inspection of graphical estimates of convergence \citep{Marin2014}.
+More details of the model specifications including priors and sampling parameters are provided in Appendix \ref{app:nonlinear_priors}, \ref{app:glm_priors} and \ref{app:sampling}.
+
+
+\section{Results Part I: Exploratory data analysis}
+\label{sec:results_I}
+
+Here we offer exploratory comparisons of performance across several variables of interest to provide the reader with an overview of several interesting patterns present in the data set.
+To relate variables of interest we fit univariate smoothing splines to the data within a Generalised Additive Model (GAM) framework provided by the mgcv package \citep{Wood2011}.
+
+\subsection{Contrast statistics of the stimuli}
+
+With pixel intensities of the original image on a $[0, 1]$ scale, coefficients on the pyramid scales are typically small values clustered around zero due to decorrelation \citep{Adelson1981}.
+The standard deviation of these coefficients in one frequency band over the target patch (2 by 2\,degrees, computed on the unmodified video signal) yields the contrast energy for that band \footnote{Note that these are standard deviations, so in the contrast processing model presented in Equation \ref{eq:nonlinear_transducer}, $p = 2$ is a type of energy detector.}; these distributions and the correlations between them are shown in Figure \ref{fig:contrast_stats}.
+We consider the relationship between pixel intensity and performance in the Appendix (Section \ref{app:pixel_intensity}). 
+
+It was rare for contrasts to exceed a contrast energy of 0.1, and instances of exactly zero contrast occurred infrequently (21 trials).
+The bulk of the distribution of pedestal contrast energies in the dataset therefore fell between 0.01--0.032 (Figure \ref{fig:contrast_stats}~A).
+
+The contrast energies in natural signals tend to be correlated across spatial scales~\citep{Field1987,Simo97,ZeBaWe93a,Balboa2000,Mante2005}.
+The correlations (Spearman's rank order coefficient) between the band energies in the six spatial frequency bands observed in our stimuli are given in Figure \ref{fig:contrast_stats}~B.
+Neighbouring bands are highly correlated with one another and this relationship gets weaker with distance (falloff in correlation with filter distance shown in Figure \ref{fig:contrast_stats}~D).
+The high correlation between nearby bands is not solely due to correlations in natural scene statistics in our case, however: there is substantial overlap in the frequency selectivity of the pyramid bands (Figure \ref{fig:contrast_stats}~C), which will also contribute to the correlations between them.
+
+
+%%%% Contrast energy statistics %%%%%
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{figs/contrast_statistics.pdf}
+\caption{
+Contrast energy statistics and spatial filtering.
+\textbf{A:} Histograms of contrast energy distributions observed in the dataset for 6 spatial frequency bands (each band extent labelled on subplots in cycles per degree).
+\textbf{B:} Correlations (Spearman's $\rho$) between the contrast energy in each spatial frequency band at the target location.
+\textbf{C:} Normalised filter responses as a function of spatial frequency.
+\textbf{D:} Correlation profiles of three example filters (replotted from B). 
+The x-axis shows the difference in filter level (lower corresponds to more coarse neighbours), the y-axis shows the rank-order correlation between the example filter (colour) and its neighbour.
+}
+\label{fig:contrast_stats}
+\end{figure}
+
+
+
+\subsection{Performance as a function of contrast manipulation}
+
+Targets were created by multiplying the band-limited contrast energy by a factor.
+Can observers do the task at all, and if so, what range of performance do they exhibit?
+Figure \ref{fig:explore_performance} shows performance as a function of the multiplication factor, for each observer at each target spatial frequency.
+In general, performance monotonically increases as a function of multiplication factor as might be expected.
+However, performance does not reliably increase until observers are responding perfectly, instead asymptoting at approximately 85\% correct for the observer with the most data (S1).
+The task is inherently difficult, likely due to the spatial and temporal uncertainty of target presentation coupled with the additional uncertainty created by eye movements and the requirement to respond in retinal coordinates \citep[see also][]{Dorr2013}.
+Our future conclusions must be considered with the caveat that we have not captured a full range of performance.
+
+%%%% performance explore.
+\begin{figure}[H]
+\includegraphics[scale=1]{figs/explore_performance.pdf}
+\centering
+\caption{
+Performance as a function of the multiplication factor applied to the band energy in the target location, for the five observers (rows) at six target spatial frequencies (columns).
+Target band energy has been binned into two categories for visualisation by median split: low (0 -- 0.019) and high (0.019 -- 0.2) contrast.
+Points show the expected value for a beta distribution after rule-of-succession correction, and error bars show 95\% beta distribution CIs.
+Curves and shaded regions show the fits and confidence regions of smoothing splines (cubic spline with 3 knots, GAM with a logistic link function).
+Dashed horizontal lines show chance performance (0.25).
+}
+\label{fig:explore_performance}
+\end{figure}
+
+Observers also appear to differ on their ability to do the task.
+For high pedestal contrasts, observers S3 and S4 show less improvement as the multiplication factor increases.
+Since these observers completed fewer trials than the other observers (see Table \ref{tab:trial_numbers_nas}, it is plausible that this reflects measurement noise or possibly different task strategies.
+
+Another feature of the data noticeable in Figure \ref{fig:explore_performance} is that performance differs as a function of the target spatial frequency.
+Specifically, most observers seem able to perform the task when the target is at a medium spatial scale (0.75--6 cpd), but the slope of performance as a function of multiplication factor decreases for most observers for the higher target spatial frequencies (6--24 cpd).
+This general pattern of peak sensitivity to contrast is consistent with the typically-reported peak of the contrast sensitivity function \citep[1--3~cpd;][]{Campbell1968}.
+
+Finally, it can be seen that performance for bins of ``high'' pedestal contrast is generally better than for ``low'' pedestal contrasts.
+We discuss how this result is consistent with contrast masking in the Appendix (Section \ref{app:contrast_masking}).
+
+
+
+\subsection{Eye movements}
+\label{sec:eye_movements}
+
+How did observers move their eyes while freely watching naturalistic movies in this task?
+We collected many hours of eye movement data that is relevant to television watching, if not classically natural behavior. Overall, eye movement directions were generally distributed on the cardinal axes (see Figure \ref{fig:em_multipanel}~A).
+Relative to saccades initiated prior to target onset (``previous'' saccades), saccades initiated after the target onset (``next'' saccades) were biased in the direction of the target (more frequent saccades to the ``north'' in Figure \ref{fig:em_multipanel}~A).
+The amplitude of ``previous'' and ``next'' saccades did not differ to an appreciable degree (Figure \ref{fig:em_multipanel}~B).
+
+A coarse measure of how eye movement behaviour is related to performance is to examine the cumulative distance that the eyes moved over the course of the trial (from target onset to offset).
+When this value is low, the experimental conditions are a closer approximation to those observed in typical laboratory experiments on contrast discrimination (i.e. the eyes are steady).
+Performance fell off approximately linearly with the log of the cumulative eye movement distance in degrees (Figure \ref{fig:em_multipanel}~C).
+This is expected because eye movements will both smear the retinal image and create additional positional uncertainty regarding the target's location relative to the fovea.
+
+%%%% eye movement multipanel figure.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{figs/em_multipanel.pdf}
+\caption{
+Eye movement variables and their relationship to task performance.
+\textbf{A:} Kernel density estimate of saccade directions, plotted in polar coordinates relative to the target direction (north).
+Left panel: saccades that were initiated prior to target onset (``previous'').
+Right panel: saccades initiated after target onset (``next'').
+The kernel is a wrapped normal distribution with a bandwidth of 0.02 radians, estimated using R package Circular \citep{Agostinelli2013}.
+\textbf{B:} Distributions of saccade amplitudes for the previous and next saccade (note logarithmic y-axis).
+White blobs are kernel density estimates symmetric about the vertical axis (violin plots).
+These are superimposed with the mean (points) and 95\% highest density interval (HDI) of the distributions.
+\textbf{C:} Performance as a function of the cumulative distance the eyes moved over the course of a trial (note logarithmic x-axis), for all trials with valid eye movement data (fitted to all data pooled across observers).
+Solid line shows the fit of a logistic GAM using a cubic spline with five knots; shaded region shows the 95\% confidence interval on the fit.
+Dark dashes on the x-axis show the locations of observed data points.
+Higher performance was associated with steadier gaze.
+\textbf{D:} Performance as a function of the direction of the saccade relative to the target (A = ``away'', L = ``left'', R = ``right'', T = ``towards'' the target) initiated after target onset, averaged across observers.
+The solid lines show fits of a logistic GAM using a cyclic cubic spline with nine knots; shaded region shows the 95\% confidence interval on the fit.
+Panels split the data by time of saccade relative to target onset (in ms, columns) and saccade amplitude (in degrees, rows).
+The middle panel shows the relationship between performance and saccade direction for saccades initiated between 120 and 480~ms after target onset, that had an amplitude of 1--3 degrees.
+}
+\label{fig:em_multipanel}
+\end{figure}
+
+Next, we examine the direction of eye movements relative to the target location. We examined how the direction of the ``next'' eye movement (that initiated subsequent to target onset) was associated with performance (Figure \ref{fig:em_multipanel}~D). Saccades in the direction of the target were associated with higher performance than saccades orthogonal to the target's location. Note that this association is correlational: it is possible that eye movements in the target direction were driven by trials in which the observer detected the target then subsequently planned an eye movement in that direction.
+Alternatively it is possible that on trials where the observer happened to plan a saccade in the target direction, the observer was more likely to report the correct location of the target, possibly owing to remapping \citep{Deubel1996}.
+
+Some insight into this distinction is provided by the time course relative to target onset (columns in Figure \ref{fig:em_multipanel}~D).
+Saccades initiated between zero and 120~ms after target onset occur too soon to be in response to the target appearance.
+Correspondingly, here there is little evidence of a relationship between direction and performance.
+Conversely, saccades initiated after 120~ms and of an amplitude that would bring the fovea over the screen location previously occupied by the target (1--3 deg) show a clear association between direction and performance.
+These data suggest that the association between saccade direction and performance is likely driven by the observer first detecting the target then subsequently planning a saccade in that direction.
+
+Figure \ref{fig:em_multipanel}~D shows that the detectability of the target depends on the timing of target presentation relative to saccade occurrences.
+To gain further insight into this relationship we plot the relationship between performance and the relative timing of the ``previous'' and ``next'' saccades, for saccades within 2 seconds of the target onset.
+91\% of previous saccades offset within 2 seconds before the target onset and 86\% of next saccades began within 2 seconds of target onset.
+In addition, we show the relationship for saccades \textit{towards} the target (defined here as $\pm 22.5^\circ$ from the target direction) separately from \textit{other} directions.
+Figure \ref{fig:em_timings}~A shows the time from the offset of the previous saccade until the onset of the target.
+There is little evidence for any relationship between these variables.
+Conversely, performance appears to depend quite strongly on how soon after the target onset observers made their next saccade.
+Figure \ref{fig:em_timings}~B shows the time from the onset of the target until the onset of the next saccade.
+For saccades towards the target location, trials on which the saccade was initiated around 300~ms after target onset were associated with better performance.
+This relationship drops, before improving again for trials where the next saccade started 1000~ms after the target onset.
+This may represent trials in which the eye remained relatively still (see Figure \ref{fig:em_multipanel}~C).
+For saccades in other directions, performance seems to slowly decline as the time to saccade initiation increases, peaking around 600~ms, before reversing to join with the ``towards'' condition again by 1500~ms.
+The relative dip in performance around 600~ms for saccades in both directions may reflect the influence of geotopic mislocalisation errors on performance \citep{Dorr2013}.
+Note that the timing data in Figure \ref{fig:em_timings}~B corresponds to the same variable used to split the direction plots in Figure \ref{fig:em_multipanel}~D (columns).
+
+
+%%%% eye movement multipanel figure.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{figs/em_timing.pdf}
+\caption{
+Relationship between performance and saccade timings in relation to target onset (at 0), for saccades towards the target (dashed curve) and in other directions (solid curve).
+\textbf{A:} Performance as a function of the time between the offset of the saccade made prior to the target.
+Solid line shows a logistic GAM fit to the pooled data across subjects using a cubic spline with eight knots; shaded region shows the 95\% confidence interval on the fit.
+\textbf{B:} Same as A for the time from the onset of the target until the onset of the next saccade.
+In these plots, a saccade ``towards'' the target is one within $\pm 22.5^\circ$ of the target's direction relative to the fovea; of the trials analysed here this represents 15\% and 19\% for the previous and next saccades respectively.
+}
+\label{fig:em_timings}
+\end{figure}
+
+\subsection{Image features}
+\label{sec:image_features}
+
+In our experiment, the image content at the target location depends on what happens to be present in the movie stimulus at any given time.
+How does performance depend on the features of the image at the target location and surrounding?
+As an initial approach to this question we consider the \textit{intrinsic dimensionality} of the video signal: the number of dimensions over which the signal changes in a certain spatial or temporal scale.
+For example, a zero-dimensional signal is one with no change in any dimension.
+A one-dimensional change could refer to a stationary edge or a spatially-distributed luminance change over time.
+A two-dimensional change could refer to a corner: the intersection of two edges causes a change in both the x- and y dimensions.
+A three dimensional change refers to a transient corner (one that appears and then disappears), and can only be inferred from a 3D (spatiotemporal) signal.
+
+The intrinsic dimensionality of a signal can be estimated from the geometric invariants of the structure tensor \citep{Zetzsche1990,Barth2000}.
+In a 3D signal, if invariant $H$ has a value greater than zero, the signal is \textit{at least} intrinsically one-dimensional, if invariant $S$ is greater than zero the signal is at least intrinsically two-dimensional and if invariant $K$ is greater than zero then the signal is intrinsically three-dimensional.
+We average responses of these geometric invariants over the target patch; loosely, this can be thought of as an index of feature density (where ``features'' are edges in space and time). 
+In order to capture features of different sizes, we computed the invariants on an anisotropic spatio-temporal pyramid  with 6 spatial and 3 temporal scales (i.e. over the spatiotemporal movie signal).
+As for the contrast statistics above, the invariants were computed on the unmodified video signal within a 2 by 2\,degree region centred on the target location, linearly averaged over 14 frames of the video signal centred on the target's contrast peak. 
+We additionally computed 2D invariants (i.e. for static movie frames) and also invariants at the nontarget locations, but do not present them in this manuscript.
+They are provided in the dataset online.
+
+Based on informally exploring the relationship between these invariants and task performance, we selected the invariant K computed over the three-dimensional video signal at three spatial scales and over a moderate temporal window (160\,ms).
+The relationship between (log) feature intensity and performance for these invariants are shown in Figure \ref{fig:image_features_K}.
+At all spatial scales, performance increases as the feature value increases above very low values.
+For invariant $K$ at coarse (.375--.75\,cpd) and fine (12--24\,cpd) spatial scales, the relationship between the feature value and performance then plateaus or even begins to decrease over the range of the bulk of the data.
+For three dimensional change over a moderate spatial scale (1.5--3\,cpd), the relationship between performance and log feature intensity continues to increase approximately linearly over the range of the data.
+
+%%%%% invariants.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/image_features_reduced_3D.pdf}
+\end{center}
+\caption{
+Performance as a function of spatiotemporal feature energy, defined as the (log-scaled) value of geometric invariant $K$ computed in three dimensions (i.e. across both space and time), at three spatial scales for a moderate temporal window (160\,ms).
+Higher feature values correspond loosely to more intense transient corners.
+Loosely, this can be considered a measure of edge density or spatio-temporal structure in the target location.
+The dashed dark lines above the x-axis show the density of trials: most trials cluster between log feature values of 0 and 5 (note also the uncertainty on the spline estimates lower than feature values of 0).
+These spline fits use a lower asymptote of zero and so do not consider chance performance in the task; the lower bound of these functions is therefore misleading.
+}
+\label{fig:image_features_K}
+\end{figure}
+
+To what extent do the invariants give us information about the image structure that is not provided by contrast alone? 
+In Figure \ref{fig:image_features_correlation} we show the relationship between contrast energy and spatiotemporal feature energy in the 1.5--3 cpd range (as in Figure \ref{fig:image_features_K}, middle panel), for trials in which the target was presented at that spatial scale.
+While the two quantities are moderately correlated (Spearman's rank-order correlation 0.54), the spatiotemporal feature energy does provide additional information.
+Intrinsically 3D structure (i.e. transient corners) can be observed even when the overall contrast is low.
+Thus, the invariants do provide information in addition to simple contrast (which is also correlated with edges in natural scenes).
+
+%%%% invariant / contrast correlations.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/contrast_invariant_correlation.pdf}
+\end{center}
+\caption{
+Relationship between contrast energy and spatiotemporal feature energy (invariant K, log scaled) at the target location in the 1.5--3 cpd range, on trials where targets were at 1.5--3 cpd.
+Individual data pairs were aggregated into hexagonal bins to reduce overplotting; lighter bins represent more samples.
+The Spearman (rank-order) correlation between contrast and invariant K is 0.54.
+Note the semilog axes.
+}
+\label{fig:image_features_correlation}
+\end{figure}
+
+
+\section{Results Part II: Nonlinear transducer models and GLMs}
+\label{sec:results_II}
+
+In the Section~\ref{sec:results_I} we presented an exploratory data analysis to demonstrate several patterns evident in the data.
+In this section we ignore the influence of eye movements and the content of the image at the target location (apart from simply the contrast), and consider the data from the perspective of a pure contrast increment detection task.
+Since Figure \ref{fig:explore_performance} revealed that the observers have variable performance and that most cannot reliably develop good performance for targets presented in spatial bands above 6 cpd, in this section we consider data from only the 1.5--3 cpd condition (i.e. 7735 trials).
+We describe the properties and prediction performance of two versions of a simple nonlinear transducer model, and an atheoretical Generalised Linear Model.
+
+\subsection{Nonlinear transducer models}
+
+\subsubsection{Method}
+
+The standard framework for considering contrast increment detection is to model the system's internal contrast response with some form of nonlinear transducer model, after \citet{Stromeyer1974} and \citet{Legge1980}.
+The visual system is hypothesised to produce an internal response to a given level of contrast.
+The ability of the observer to discriminate two contrasts is determined by the difference between the response produced by each contrast.
+Contrast detection is a special case where one of the contrasts is zero.
+This basic framework has been very successful in modelling data from numerous detection and near-threshold discrimination experiments. %\citep{Campbell1966, Nachmias1974, Stromeyer1974, Legge1980, Haun2010, GarciaPerez2007}. 
+Here we apply two simple variants of this model class to the contrast increment detection data from our experiment.
+
+The task for our observers is to discriminate which spatial location contains an (unnatural) increment in contrast.
+The naturally-occurring (unmodified) contrast at each spatial location can be considered the ``pedestal'' contrast: the base level from which the observer must discriminate the increment (see Discussion for futher elaboration of this assumption).
+The contrast after modification is the ``pedestal plus increment'' contrast.
+Performance is determined via the hypothetical internal response difference to the two:
+
+\begin{equation}
+\label{eq:delta_r}
+\Delta_R = R_{ped + inc} - R_{ped}
+\end{equation}
+
+The response difference is then related to the probability of a correct decision via the signal detection theory framework.
+The probability of a correct response in an mAFC task is given by:
+
+\begin{equation}
+\label{eq:sdt_mafc}
+\mathrm{p(correct)} = \int\limits_{-\infty} ^{\infty} \mathrm{d}x \, \phi(x - \Delta_R)\Phi(x)^{m-1} 
+\end{equation}
+
+where $\phi$ is the unit Normal density function, $\Phi$ is the cumulative Normal density function and $m$ is the number of alternatives in the forced choice task \citep{Hacker1979}.
+To avoid needing to evaluate this integral at every step of the MCMC chain, we use a Weibull approximation to this function (see Appendix \ref{app:dprime_approx}).
+
+How is the internal response $R$ determined?
+The contrast response function is a modified Naka Rushton sigmoid, which has a general form consisting of an excitatory component $E$ and a divisive inhibitory component $I$:
+
+\begin{equation}
+R(\mathrm{c}; E, I) = \frac{ E(\mathrm{c})} {I(\mathrm{c})}
+\end{equation}
+
+In the nonlinear transducer of \citet{Legge1980}, both the excitation and the inhibition are functions of the contrast in the target channel.
+We use the following parameterisation of this model:
+
+\begin{equation}
+\label{eq:nonlinear_transducer}
+R(\mathrm{c}; p, q, z, rmax) = rmax \frac{ \mathrm{c}^{p + q}} {z^p + \mathrm{c}^p}
+\end{equation}
+
+where $\mathrm{c}$ is the contrast at the target location and spatial band and $R$ is the output response.
+The function has a four parameters: $z$ is the ``semi-saturation'' point, in effect determining the horizontal position of the curve with respect to contrast.
+If $z$ is zero then there is no accelerating portion of the nonlinearity.
+$rmax$ is a scaling factor that determines the maximum absolute response.
+$p$ and $q$ determine the shape of the curve (accelerating and deccelerating portions).
+If $q$ is zero, the function is a familiar sigmoidal psychometric function with a 50\% point of $z$ and a maximum asymptotic value of $rmax$; $p$ determines the steepness of the function.
+If $q$ is greater than zero the response continues to increase as a function of contrast with an exponent of $q$ once contrast is greater than the threshold ($z$).
+The four parameters are related to one another in non-trivial ways \citep[shown analytically by][]{Yu2003,Haun2009}.
+
+It is informative to consider the fits of two transducer models with different priors.
+After \citet{Legge1980}, parameters $p$ and $q$ are often set to be around 2 and 0.4 respectively \citep[e.g.][]{Haun2013a, Alam2014}.
+These values give the ``dipper'' shape (see \citet{Solomon2009} for a broad tutorial) that provides a good fit to the facilitation effect found robustly in classical contrast increment detection tasks using sinusoidal gratings, as well as for broadband noise stimuli \citep{Henning2007}, $1/f$ noise patterns \citep{Haun2010} and static natural images \citep{Bex2007}.
+Note that the exponent values depend on task conditions \citep{Wichmann1999, Meese2002, Yu2003, Kwon2008, Haun2010}. 
+For example, \citet{Wichmann1999} found that the exponents depended strongly on the exposure duration for grating stimuli.
+We do not consider these effects further here.
+
+In our Bayesian modelling framework, fixing parameters to certain values is equivalent to placing an infinitely tight prior distribution over the parameter, for example a normal distribution centred on the relevant value with a standard deviation of zero.
+The first model we consider here (\textit{Transducer A}) uses relatively weak priors over all four parameters, allowing the data to have large influence on the posterior.
+By contrast, the priors in \textit{Transducer B} are very strong for all but one parameter, severely constraining the posterior as in previous literature.
+Details of the structure of the priors are provided in Appendix \ref{app:nonlinear_priors}.
+
+For these two models, we fit the four parameters from the nonlinear transducer model (Equation \ref{eq:nonlinear_transducer}) to the data from our five observers, estimating each parameter separately for each observer, using the MCMC package Stan (see above).
+That is, there is one parameter in the model for each subject $i$: $p_i$, $q_i$, $z_i$ and $rmax_i$.
+The outcome of each trial (correct or incorrect) was assumed to be a bernoulli random variable with probability given by our Weibull link function (Equation \ref{eq:p_weibull}).
+The contrast $\mathrm{c}$ in Equation \ref{eq:nonlinear_transducer} used to calculate $R_{ped}$ (the pedestal response) was the band energy at the target location in the target spatial frequency band, and the contrast for $R_{ped + inc}$ was the $R_{ped}$ contrast multiplied by the alpha level from the trial.
+
+\subsubsection{Results}
+
+The results from this model fitting are summarised in Figure \ref{fig:transducer}.
+Panel~A shows the priors and posteriors from the Transducer A model.
+The violin plots (kernel density estimates symmetric about the vertical axis) reveal strong bimodality in the posterior distributions for many parameters.
+For example, posterior estimates for parameter $q$ for S1 and S2 (the subjects with the most data) have modes located at approximately 0.3 and 0.5; similarly the posteriors for $rmax$ appear strongly bimodal.
+In addition, posterior distributions for $p$ are highly skewed, with the bulk of the distribution tending towards zero but with a large range.
+These bimodalities are driven by correlations between the parameters of the model, a point that we return to below (Figure \ref{fig:posterior_transducer}).
+
+Figure \ref{fig:transducer}~B is the same as panel A but for Transducer model B.
+First consider the prior distributions in both cases.
+Whereas in Transducer A the priors were relatively broad (for example, the prior on $rmax$ was a uniform distribution ranging 0--100), in Transducer B the priors for $p$, $q$ and $rmax$ are extremely tightly centred over values of 2, 0.4 and 10 respectively.
+Correspondingly, in this model the posterior distributions for these three parameters remain similar to the priors (i.e. the data do not have great influence on the strong priors).
+Only the prior on $z$ (uniform 0--1) is the same as in Transducer A.
+Compared to the posterior for $z$ in Transducer model A, the posterior for Transducer model B is very tightly constrained; this is driven by the data and the fact that the other parameters are also relatively fixed.
+
+The performance on a single trial is given as a function of the pedestal contrast and the increment contrast (Equation \ref{eq:delta_r}).
+In Figure \ref{fig:transducer}~C we show the model predictions (posterior mean) over a surface of pedestal versus increment contrast for each transducer model.
+The dashed lines in this figure show iso-performance contours across this surface corresponding to $d^\prime$ values of 1, 1.5 and 2.5.
+These curves are equivalent to threshold-versus-contrast (TvC) functions.
+For Transducer A it can be seen that the TvC functions rise smoothly as a function of the pedestal contrast.
+This is a simple masking function: as the pedestal contrast increases, a larger increment is required to reach the same level of performance.
+In contrast, Transducer B exhibits the characteristic ``dipper'' shape, in which performance first \textit{improves} relative to very low pedestal contrasts (i.e. detection) before rising sharply into a masking curve.
+The TvC functions for Transducer B are shaped this way because our strong priors force them to be.
+Interestingly, the dipper occurs at a high pedestal contrast relative to the range of the data, and the model over the bulk of the data (indicated by the red and blue density contours) shows a very different shape to Transducer A.
+
+Figure \ref{fig:transducer}~D shows predictions of the transducer models for the data as a function of the multiplication factor (replotted from Figure \ref{fig:explore_performance}).
+The prediction curves were calculated by generating a predicted proportion correct for each trial in the experiment for each saved MCMC sample, and then calculating the mean and HDI of these predictions for each subject at each alpha level.
+The predictions in this plot are not smooth (as in Figure \ref{fig:transducer}~C) because the multiplication factor was not explicitly parameterised in the model, so predictions represent an average over different pedestal contrasts.
+Transducer A provides a reasonable fit to the data.
+Conversely, Transducer B severely underestimates performance at low pedestal contrasts, and while its mean prediction is similar to Transducer A at high pedestal contrasts, the prediction variance is much higher.
+
+%%%% nonlinear transducer plots.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/transducer_multipanel.pdf}
+\end{center}
+\caption{
+Results for two nonlinear transducer models fit to the data from the 1.5--3 cpd condition.
+\textbf{A:} Prior (``Pr'') and posterior (``Post'') samples for each parameter in the Transducer A model, for each subject.
+Sample distributions are shown as violin plots, which are kernel density estimates symmetric about the vertical axis.
+Points show the mean of the samples and bars show the 95\% highest density intervals.
+Note the very different y-axis scalings.
+\textbf{B:} Same as A for the Transducer B model.
+\textbf{C:} Predicted proportion correct (posterior mean) as a function of the pedestal contrast and the increment contrast for the A and B models, subject S1.
+Predicted proportion correct on the surface is shown in greyscale values where darker colours represent lower predictions.
+Dashed curves show iso-performance contours over the surface corresponding to $d^\prime$ values of 1, 1.5 and 2.5 (approximately 55, 70 and 91\% correct).
+These are equivalent to threshold-versus-contrast (TvC) functions.
+The location of correct (blue) and incorrect (red) trials in this space are shown both as rug plots (dashes near axes) and as 2D density estimates.
+The axes of these plots have been adjusted to show the main range of the data; several trials at low pedestal contrast are excluded.
+\textbf{D:} Performance as a function of the multiplication factor Alpha, for high and low pedestal contrasts (data replotted from Figure~\ref{fig:explore_performance}, 1.5--3 cpd condition).
+Green and orange curves depict the posterior mean of predictions for the Transducer A and B models, and the shaded regions show the 95\% HDIs of these predictions.
+See text for details.
+}
+\label{fig:transducer}
+\end{figure}
+
+As noted above (Section \ref{sec:bayes_method}), estimating the posterior distribution of a model via MCMC provides rich information about the model structure.
+Here we show various views onto the posterior distribution of the two transducer models and discuss notable features.
+We do so using a type of scatterplot matrix showing the bivariate distributions of each parameter plotted against each of the other parameters in the model (these are shown in Figure \ref{fig:posterior_transducer}).
+These are the posterior distributions presented in Figure \ref{fig:transducer} A and B replotted to show the relationships between the parameters.
+
+The top panel of Figure \ref{fig:posterior_transducer} shows this data for Transducer model A, whose priors were left relatively weak.
+The posterior over model parameters is poorly behaved, with evidence for bimodality, correlations between parameters and extremely non-Gaussian shapes.
+This result is expected from the analytically-derived dependencies between the model parameters \citep{Yu2003,Haun2009}.
+It is strong evidence that our data do a poor job of constraining the parameters of this model.
+This impression was confirmed in several simulation studies (not presented here) in which we found maximum likelihood techniques yielded unstable estimates of the model parameters, indicating a flat likelihood surface with multiple local minima.
+
+In contrast, the bottom panel of this figure shows that the posterior distribution for Transducer B appears approximately Gaussian and the parameters are largely uncorrelated with one another.
+This is by design, since in this model the prior distributions were strong and the parameters were assumed to be independent (see Appendix \ref{app:nonlinear_priors}).
+The exception is for the parameters $z$ and $rmax$, which do show evidence of a moderate positive correlation.
+This is because the $z$ parameter was the only one given a broad prior, and its influence on the contrast response profile is traded off against $rmax$.
+
+
+%%%% nonlinear transducer posteriors.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/posterior_transducer.pdf}
+\end{center}
+\caption{
+Scatterplot matrices showing the bivariate distributions between each model parameter of the Transducer A (top) and Transducer B (bottom) models, for observer S1.
+The 5000 MCMC samples were aggregated into hexagonal bins to reduce overplotting; lighter bins represent more samples and thus a higher posterior density.
+}
+\label{fig:posterior_transducer}
+\end{figure}
+
+Before considering how well the nonlinear transducer models predict the data more formally, we first introduce two versions of a Generalised Linear Model (logistic regression) using the same predictor variables.
+
+
+\subsection{Generalised linear models}
+
+\subsubsection{Method}
+
+An atheoretical approach to modelling the data from the current experiment is to apply a Generalised Linear Model in the form of a modified logistic regression.
+In this framework, the sum of multiplicatively weighted predictor variables is passed through a (logistic) link function that transforms the unbounded weighted sum into the range of 0--1, which is then the expected value of a Bernoulli trial.
+Formally, the linear predictor $\eta$ is given by
+
+\begin{equation}
+\label{eq:linear_predictor}
+\eta = \beta_0 x_0 + \beta_1 x_1 + \cdots + \beta_n x_n
+\end{equation}
+
+where the $\beta$ values are a weight and the $x_n$s are the individual predictors.
+This can also be described in matrix notation as $\eta = \beta^\intercal \mathbf{X}$, where rows in $\mathbf{X}$ are trials.
+The linear predictor is then passed through a modified inverse logistic link function
+
+\begin{equation}
+\label{eq:logit_link}
+\mathrm{p(correct)} = \gamma +  \frac{(1 - \gamma)}{1 + \exp(-\eta)}
+\end{equation}
+
+where $\gamma$ is a lower bound of performance, in this case 0.25.
+The key difference between the GLM considered here and the nonlinear transducer model above is that the calculation of the internal response $R$ involving several exponents and a division (Equation \ref{eq:nonlinear_transducer}) has been replaced with the simpler linear combination of predictor variables.
+
+We first consider a GLM with three predictor variables: the pedestal contrast, the increment contrast and an intercept, that are estimated for each subject separately (this model is the \textit{single level GLM}).
+Any pedestal or increment contrast values of zero were set to the minimum nonzero value, then the log of the contrast was taken.
+The design matrix of the model fit to the trials of each subject $i$ is then given by:
+
+\begin{equation}
+\label{eq:single_level_glm}
+\eta_{i} = \beta_{i,0} + \beta_{i,1} \mathrm{ped} + \beta_{i,2} \mathrm{inc}
+\end{equation}
+
+where ped is a vector of the log pedestal contrast on all the trials from subject $i$, inc is the log increment contrast on each trial, the first coefficient $\beta_{i,0}$ is the intercept, $\beta_{i,1}$ and $\beta_{i,2}$ are the slopes of ped and inc respectively,  and $\eta_{i}$ is a vector of linear predictor values for each trial.
+We then normalised the design matrix by subtracting the mean and dividing by the standard deviation (i.e. z-scores were computed).
+Normalising the predictors makes the model easier to interpret because the intercept represents the level of performance when pedestal and increment contrast were at their mean in the data, and the magnitudes of the coefficients are comparable since they are based on z-scores
+\footnote{Note that this means we are estimating more parameters (the mean and variance for each predictor) so it is not the case that this model has only three parameters where the nonlinear transducers have four. Nevertheless we believe the gain in interpretability is worth the extra complexity, which is standard practice when employing GLMs.}.
+
+Second, we consider a \textit{multilevel} extension of the model above, such that each subject is considered as part of a population, and the individual subject $\beta$ coefficients are estimated concurrently with the mean and variance of the coefficients at the population level.
+Multilevel (hierarchical) models have the desirable property of creating \textit{shrinkage} (also called \textit{partial pooling}) between parameter estimates: each subject's coefficient estimates are influenced by those of the other subjects to the extent suggested by the data, via the population variance term \citep{Gelman2006a, Gelman2007, Kruschke2011a}.
+Observer-level parameters with higher variance (greater uncertainty) will be pulled more strongly towards the centre of the population distribution than observer-level parameters with low variance.
+This is a conservative influence on inference since it can reduce false alarms.
+The multilevel models considered here are a more general version of mixed models, which have recently been advocated for analysing psychophysical data \cite{Moscatelli2012, Knoblauch2012}.
+The multilevel model is somewhat like estimating separate regressions for each subject then conducting another regression on the individual subject coefficients to derive population estimates, except that here all these parameters are estimated concurrently.
+In addition to the individual subject $\beta_{i,j}$ terms in Equation \ref{eq:single_level_glm}, the multilevel model has a population mean $\mu_j$ and standard deviation $\sigma_j$ for each predictor variable $j$, whose posterior distributions are also estimated.
+
+For both the single level and multilevel logistic GLMs, we use weakly informative prior distributions over the parameters.
+For example, in the single level model, the prior for each $\beta$ is a normal distribution with mean 0 and standard deviation 2.
+Since the predictors are in standard units, this represents a broad \textit{a priori} range of slope values.
+The two GLMs are developed in more detail in Appendix \ref{app:glm_priors}.
+
+\subsubsection{Results}
+
+The results from fitting the single-level GLM (i.e. independent parameter estimates for each subject) and the multilevel GLM are summarised in Figure \ref{fig:glm}.
+This Figure is similar in its structure to Figure \ref{fig:transducer}.
+
+Considering Figure \ref{fig:glm}~A and B, it can be seen that relative to the (broad) prior distributions, the posterior distributions are tightly constrained by the data.
+Furthermore, unlike the posterior distributions for the transducer model in Figure \ref{fig:transducer}, these distributions appear well behaved (no evidence of bimodality).
+In terms of the model coefficients, since this is a linear model note that a coefficient of zero means that the parameter has no relationship to performance (i.e. it is multiplied by zero and so dropped from the model).
+The coefficients for pedestal contrast are all negative on average.
+This indicates that the probability of success on a trial decreases as the pedestal contrast increases, and is indicative of contrast masking (consistent with Weber / Stevens law).
+On the other hand, the coefficients for the increment contrast are all strongly positive, which is no surprise because this is effectively the signal strength of the target: as increment contrast increases the probability of getting the trial correct also increases.
+Since the predictors are all normalised to have mean zero, the intercept parameter represents the average level of performance (in the linear predictor) for each subject when pedestal and increment contrast were at their mean.
+
+Panel C shows that the iso-performance contours of the models (i.e. the TvC functions) are linear through log-pedestal versus log-increment space.
+This is a property of the models since they contain no interaction terms or higher order polynomials that would allow curvature in the model surface {\footnote{In a pilot model fit we tested an interaction term and found that its coefficient did not differ credibly from zero, so we exclude it here for simplicity.}.
+The predictions of these atheoretical models do not make much sense outside the range of the data.
+For example, these models predict that as the pedestal contrast becomes increasingly close to zero, increment contrast also approaches zero.
+This is not realistic since we know that contrast increment detection threshold is appreciably above zero --- i.e. it must saturate at some lower bound.
+Nevertheless, note that within the range of the data of the present experiment (density contours in panel C), the iso-performance contours are similar to those of Transducer A in Figure \ref{fig:transducer}~C.
+
+Finally, panel D shows the model predictions for performance as a function of the multiplication factor at high and low pedestal contrasts (binned as in Figure \ref{fig:explore_performance}).
+The posterior mean predictions (curves) are quite similar between the two models, but the single level model shows higher prediction variance.
+This is because in the multilevel model, all the data is used to inform the fits at the subject level, meaning that the coefficients for subjects with less data are moved towards the population mean.
+
+%%%% glm multipanel.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/glm_multipanel.pdf}
+\end{center}
+\caption{
+Results for two logistic GLMs fit to the data from the 1.5--3 cpd condition. Display as in Figure \ref{fig:transducer}; refer there for explanation.
+\textbf{A:} Prior and posterior samples for the single level GLM.
+Note that the y-axis range has been reduced to show the useful range of the posterior marginal distributions; prior distributions extended from -5 to 5.
+\textbf{B:} Same as A for the multilevel GLM, in which coefficient estimates from individual subjects influence each other.
+\textbf{C:} Predicted proportion correct as a function of the pedestal and increment contrast for the single and multilevel models for subject S1.
+\textbf{D:} Predictions as a function of multiplication factor, along with data replotted from Figure \ref{fig:explore_performance}.
+See text for details.
+}
+\label{fig:glm}
+\end{figure}
+
+Figure \ref{fig:posterior_glm} shows the posterior distributions of the two GLM models as in the nonlinear transducer models above.
+As for the Transducer B model, the posteriors for both GLMs are quite well behaved, showing approximately Gaussian shapes albeit with relatively strong correlations between the parameters.
+The difference between this and the Transducer B model is that here the prior distributions were relatively weak, whereas there the prior distributions strongly constrained the model.
+
+%%%% GLM posteriors.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/posterior_glm.pdf}
+\end{center}
+\caption{
+Scatterplot matrices showing the bivariate distributions between each subject-level model parameter, for the single (top) and multilevel GLMs (bottom) for observer S1.
+As in Figure \ref{fig:posterior_transducer}, the 5000 MCMC samples were aggregated into hexagonal bins to reduce overplotting; lighter bins represent more samples and thus a higher posterior density.
+}
+\label{fig:posterior_glm}
+\end{figure}
+
+
+\subsection{Model comparison: predictive performance}
+
+We have described four models fit to the trials from the 1.5--3 cpd condition: two nonlinear transducer models with different priors, one single level GLM (fit to each subject separately) and one multilevel GLM (including partial pooling across subjects by estimating population-level parameters).
+How well do the models predict unseen data?
+We fit the four models outlined above in a crossvalidation framework.
+The 7735 trials in this condition were partitioned into five folds, each model was fit to all but one fold, the remaining (unfitted) trials were predicted from the model coefficients and then this procedure was repeated for each fold.
+We thereby obtain a prediction (expected proportion correct) for each trial where that trial was not included in the model fitting; this gives a more realistic estimate of the out-of-sample predictive performance of the model.
+\footnote{For the GLM models the normalisation of the predictors (into z-scores) was also crossvalidated by using the mean and standard deviation of the training set to normalise the test set.}
+The predicted proportion correct was the posterior mean, calculated by generating a prediction for each MCMC sample then taking the mean over samples for each trial.
+
+We examine two measures of predictive performance.
+The first is the area under the Receiver Operating Characteristic curve (a plot of hits versus false alarms as the threshold for classifying as ``success'' or ``failure'' is raised from 0 to 1).
+If the models had no predictive value, the area under the ROC would be at 0.5, whereas perfect prediction would be 1.
+Values of the area under the ROC were calculated using the ROCR package \citep{Sing2005} .
+The second is the average log likelihood of the data, measured in bits/trial (i.e. taking the logarithm with base 2).
+This score is calculated relative to a baseline model in which the mean performance from the training set was used as the prediction for the test set.
+Each model log likelihood is presented as the difference from this baseline model.
+A score of 1 bit/trial relative to the baseline model would mean that the model in question predicts the data twice as well as the baseline ($2^1 = 2$). 
+The average log likelihood is a more continuous measure of prediction performance than the area under the ROC since it measures the distance of the data from the prediction rather than just the sign.
+Note that the baseline model performs at 0.5 for the area under the ROC curve metric because it provides no information on whether individual trials lie above or below the mean.
+
+The prediction results are shown in Figure \ref{fig:crossval_I}.
+To provide some intuition about the uncertainty of the model predictions, we also show bootstrapped 95\% confidence intervals on the log likelihoods.
+The GLM, multilevel GLM and Transducer A models show similar predictive performance.
+The Transducer B model, with parameters tightly constrained to values used in previous experiments, shows relatively poor prediction.
+In terms of log likelihood it is about the same as the baseline model.
+The ROC and log likelihood show a similar pattern of results.
+To verify our MCMC results we also present the predictions of the single level GLM model fit via maximum likelihood methods, using a custom logistic link function (equivalent to Equation \ref{eq:logit_link}) from the psyphy package \citep{knoblauch2014}.
+This is shown as the dashed horizontal line in Figure \ref{fig:crossval_I}.
+It overlaps with the GLM model, providing a sanity check that our MCMC methods are working.
+
+Two caveats should be borne in mind when considering these predictive performances.
+First, our simple bootstrap procedure assumes all observations are independent, while our data have dependencies both within and across observers. 
+Second, crossvalidation is performed on the individual trial level rather than between subjects. 
+Consequently the results in Figure \ref{fig:crossval_I} are likely to underestimate both prediction errors and uncertainty, particularly for predicting the behaviour of a new subject.
+Nevertheless the bootstrapped confidence intervals give a sense of the uncertainty in these estimates, and additionally show that the average prediction performance of all test models are well above baseline, except nonlinear transducer B.
+
+ %%%% crossvalidation plot..
+ % this figure produced by /funs/plot_crossvalidation_results.R
+ \begin{figure}[H]
+ \begin{center}
+ \includegraphics[scale=1]{figs/crossval_summaries.pdf}
+ \end{center}
+ \caption{
+Predictive performance for the four models assessed via 5-fold crossvalidation, for two metrics.
+\textbf{A:} the area under the ROC curve (higher is better, chance is 0.5).
+\textbf{B:}  the average log likelihood in bits/trial, relative to a baseline model in which the mean performance from the training set was used as the prediction.
+Positive values indicate improvement over the baseline model.
+Horizontal axis shows the models (single level GLM, multilevel GLM, nonlinear transducer models A and B respectively).
+Dashed horizontal line shows the performance of a single level GLM (equivalent to the ``GLM'' model) estimated by maximum likelihood.
+Error bars show 95\% confidence intervals derived from 5000 bootstrap samples.
+ }
+ \label{fig:crossval_I}
+ \end{figure}
+
+\section{Results Part III: GLM incorporating other predictors}
+\label{sec:results_III}
+
+We have shown above that a GLM (logistic regression) has similar predictive performance to the more mechanistic nonlinear transducer model, and is arguably easier to interpret because its parameters are less dependent and more constrained by our data.
+In this section we seek to include both the contrast information and some non-contrast predictors to predict performance.
+We do so by extending the GLM presented in Section \ref{sec:results_II} to include these predictors.
+Specifically, here we fit a multilevel logistic regression to all the data (i.e. including all contrast band conditions) and include eye movement (Section \ref{sec:eye_movements}) and image features (Section \ref{sec:image_features}) into the same model.
+It is unclear how best to incorporate these features into the nonlinear transducer model (a point we return to in the discussion), but in the GLM framework these are simply included as additional predictors with additional coefficients in the linear predictor (Equation \ref{eq:linear_predictor}).
+While this is certainly an incorrect oversimplification, we include it here to encourage further development of models to improve predictive performance and explanatory power in data sets like ours.
+
+\subsection{Method}
+
+The predictors we consider here are the pedestal contrast (band energy at the target location), the increment contrast, the geometric invariant K calculated at a mid-range spatial scale and across a mid-range temporal window (the 1.5--3 cpd condition in Figure \ref{fig:image_features_K}), the cumulative eye movement distance during target presentation (Figure \ref{fig:em_multipanel}~C) and the spatial band of the target (treated here as a factor, which therefore has 5 levels).
+In addition, the model contains an intercept term (which, when the predictors are normalised, is the intercept for the first level of target spatial band).
+These features yield 10 subject-level regression coefficients, of which four are the slopes of continuous covariates (pedestal, increment, invariant K and the cumulative eye movement distance).
+These continuous predictors were first converted to log units as above (replacing any zero values with the minimum nonzero value), then normalised into z-scores to make the coefficients more interpretable.
+The remaining coefficients are offsets that cause the regression surface to shift without changing its shape.
+
+In addition to these 10 coefficients for each subject, we also estimated a population mean and deviation parameter for each regression coefficient.
+Since the subject-level parameters are determined by these population coefficients, the model will incorporate partial pooling (shrinkage) between subject estimates as in the multilevel model above.
+Details of the fitting of this model are provided in Appendix \ref{app:glm_priors}.
+
+This model was fit to a randomly-selected subset of 80\% of the trials.
+The remaining 20\% of trials were used as a test set to provide a measure of out-of-sample prediction performance.
+We did not do full crossvalidation as in Section \ref{sec:results_II} above since this model takes longer to fit than those considered in Section \ref{sec:results_II}.
+
+\subsection{Results}
+
+Some key results of this model fitting are shown in Figure \ref{fig:full_glm}.
+Panel A shows the posterior distributions of the population-level coefficients for the continuous covariates.
+As expected and as in the simpler GLM above, the probability of success decreases as the pedestal contrast increases (masking) and increases strongly as increment contrast increases (the signal strength of the target increases).
+As expected from the cumulative eye movement plot in Figure \ref{fig:em_multipanel}C, more eye movement during the target presentation is correlated with a lower probability of success on a trial.
+Finally and unexpectedly, the coefficient for invariant K is negative, indicating that as invariant K increases (as the target location grows in edge density) the probability of success decreases.
+This relationship is the opposite sign to the positive relationship observed for the same data (the 1.5--3 cpd condition) in Figure \ref{fig:image_features_K}.
+This is because here the pedestal contrast is also included in the model, whereas Figure \ref{fig:image_features_K} considers only the univariate relationship between invariant K and the response.
+We return to this point in the discussion section.
+
+Panel B of Figure \ref{fig:full_glm} shows the population-level regression intercepts for the spatial frequency conditions.
+The 0.375--0.75 coefficient is the intercept in the model, since this spatial frequency acts as the reference level for the dummy coding of target spatial frequency.
+In this case the model intercept corresponds to the value of the linear predictor in the 0.375--0.75 condition when all covariates are at their mean value.
+The other coefficients of the spatial frequency factor levels are offsets to this intercept.
+What we plot in Panel B are not the raw coefficients but the intercepts, calculated by adding the offsets for the factor levels to the intercept for the model.
+Higher values of the intercepts correspond to better performance levels, taken when the covariates are at their mean.
+Interestingly, sensitivity as a function of spatial frequency shows a tuning, in that it peaks broadly at 0.75--3 cpd.
+This fits well with peak sensitivities measured in more standard contrast detection and discrimination paradigms.
+The variance on the estimates are so high because these are the population-level estimates, and so they are effectively based on only five data points (the subjects in the experiment).
+To gain more precise estimates of the population-level effects we would need to test more subjects, or impose stronger priors (i.e., assume that members of the population are very similar).
+
+In Panel C, we show the predicted proportion correct as a function of the pedestal and increment contrasts as above in Section \ref{sec:results_II}, for subject S1 in two spatial frequency conditions.
+The iso-performance contours have the same slope in both spatial frequency conditions, since the model structure does not allow the slopes to vary.
+The effect of the differing intercepts is evident in the downward shift of the iso-performance contours in the .75--1.5 condition compared to the .375--.75 condition.
+That is, less increment contrast is required to elicit the same level of performance in the higher spatial frequency condition.
+
+Finally, Panel D shows a similar plot but for pedestal contrast versus ``edge density'' (geometric invariant K).
+Performance decreases as pedestal increases, and decreases as edge density increases.
+This provides another view onto the model surface which we return to in the discussion.
+
+%%%% full glm multipanel.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/full_glm_multipanel.pdf}
+\end{center}
+\caption{
+Results for an expanded multilevel GLM fit to all the data in the experiment.
+This model includes both eye movement and local image structure predictors alongside the pedestal and increment contrasts.
+\textbf{A:} Posterior distributions of the population-level means of the coefficients for the four continuous predictor variables (covariates).
+As in Figure \ref{fig:transducer}, kernel density estimates are shown as violin plots, points show the mean of the samples and error bars give the 95\% HDI.
+\textbf{B:} Posterior distributions of the intercepts corresponding to the different target spatial frequency conditions, calculated by adding the offset coefficient of each factor level to the model intercept.
+A tuning can be seen in the data, with sensitivity peaking around 1.5--3 cpd in agreement with the typical contrast sensitivity function.
+\textbf{C:} Predicted proportion correct as a function of the pedestal and increment contrast for the .375--.75 and the 1.5--3 cpd conditions, for subject S1.
+See Figure \ref{fig:transducer}~C for a description of the plot objects.
+Since spatial frequency is modelled here as an offset with no slope change, the model iso-performance contours shift up and down without changing shape or angle.
+\textbf{D:} Predicted proportion correct as a function of the pedestal contrast and the value of geometric invariant K (``edge density'').
+As edge density increases the slope of the iso-performance contours decreases.
+}
+\label{fig:full_glm}
+\end{figure}
+
+As noted above, to examine the predictive performance of this expanded GLM, we fit the model to a random 80\% of the trials and then tested its performance on the remaining 20\%.
+For comparison we did the same for a single level GLM (i.e. with no population level and therefore no shrinkage) fit via maximum likelihood methods.
+The results are shown in Figure \ref{fig:crossval_II}.
+While the multilevel GLM does outperform the single level comparison the difference is negligible.
+We provide these values here mainly to facilitate comparison with future researchers who may wish to compare other models to our simplistic GLM.
+
+ %%%% crossvalidation plot..
+ \begin{figure}[H]
+ \begin{center}
+ \includegraphics[scale=1]{figs/crossval_full_model.pdf}
+ \end{center}
+ \caption{
+Predictive performance for the expanded multilevel GLM and for the same model fit separately to each subject using maximum likelihood methods.
+\textbf{A:} the area under the ROC curve (higher is better, chance is 0.5).
+\textbf{B:}  the average log likelihood (bits/trial, relative to the baseline model).
+Error bars show 95\% confidence intervals derived from 5000 bootstrap samples.
+Note that it is not appropriate to compare these numbers to those in Figure \ref{fig:crossval_I} since those results are fit to only a subset of this data set.
+ }
+ \label{fig:crossval_II}
+ \end{figure}
+
+
+
+
+\section{Discussion}
+
+This paper reports human sensitivity to contrast increments presented in natural image movies in a gaze-contingent paradigm.
+The contrast increments were localised in both space and spatial frequency.
+We have presented three analyses that provide a starting point for exploration of this complex data set.
+We now summarise the key results from each analysis, consider several aspects of the results in greater detail, and provide discussion on related points.
+
+\subsection{Exploratory data analysis}
+
+In the first results section, we showed that performance increases as a function of the magnitude of the contrast increment, and that the strength of this relationship depends on the spatial scale of the increment (Figure \ref{fig:explore_performance}).
+Specifically, observers were most sensitive to mid-range spatial frequencies between 0.75 and 3 cycles per degree, consistent with peak contrast sensitivity measured in simple stimuli~\citep{Campbell1968}.
+Our analysis of an extended logistic regression model supported this impression more quantitatively (Figure \ref{fig:full_glm}~B).
+
+Sensitivity also depends on the direction, timing and amplitude of eye movements around the time of target presentation.
+Saccades initiated after the target onset are biased in the direction of the target (Figure \ref{fig:em_multipanel}~A), and performance improves when these saccades are the same size and at latency of the peak of the target contrast (Figure \ref{fig:em_multipanel}~D).
+Performance generally decreases the more the eyes move during the trial (Figure \ref{fig:em_multipanel}~C), consistent with our previous observation \citep{Dorr2013}.
+The timing of the subsequent eye movement relative to the target onset appears to have a long-lasting relationship with performance, in that sensitivity declined when saccades were initiated 600~ms after target onset and improved again for trials where saccades were initiated 1200~ms after the target onset.
+These effects are on much longer timescales than typically reported for peri-saccadic perception, and therefore are likely to represent the influence of higher-level effects such as geotopic mislocalisations of the target \citep{Dorr2013}. 
+
+The image features at the target location (geometric invariants; loosely, a measure of edge density) were also related to performance (Figure \ref{fig:image_features_K}), but the positive slope of these relationships may be driven largely by rare low-valued trials, and this relationship changes when considered in conjunction with contrast (see below).
+We also confirm previous research \citep{Field1987,Simo97,ZeBaWe93a,Balboa2000,Mante2005} showing that the contrast energy in spatial bands of naturalistic images are highly correlated with one another (Figure \ref{fig:contrast_stats}).
+
+\subsection{Nonlinear transducer models and GLMs}
+
+In the second results section we fit a subset of the data (the 1.5--3~cpd condition) with a four-parameter nonlinear transducer model and with an atheoretical logistic regression model.
+When the nonlinear transducer model was fit with relatively weak prior assumptions about the model parameters (Transducer A), the fitted model produced a posterior distribution with multiple bimodalities (Figure \ref{fig:transducer}) and extreme correlations between the model parameters (Figure \ref{fig:posterior_transducer}).
+Moreover, the fitted posterior means for the model parameters were quite different to the model parameters typically found in studies that employ nonlinear transducer models.
+We return to this point below.
+Constraining the model parameters by imposing strong prior distributions based on typical values from the literature led to more reasonable posterior distributions (Transducer B), but produced relatively poor fits to the data (Figure \ref{fig:transducer}~D).
+This was confirmed by comparing the predictive performance of the models using crossvalidation (Figure \ref{fig:crossval_I}).
+In contrast, the GLM parameters were relatively well constrained by the data (Figure \ref{fig:glm}), the posteriors more sensible (albeit still correlated; Figure \ref{fig:posterior_glm}), and the predictions were equivalent to the nonlinear Transducer A model (Figure \ref{fig:crossval_I}).
+
+The four-parameter nonlinear transducer model has been applied with success to many psychophysical data sets \citep[e.g.][]{Foley1994, Tolhurst1997, Bex2007, Haun2010, Haun2013a, Holmes2004, Kwon2008, Meese2002, Meese2006}.
+It is theoretically appealing because it is a mechanistic model of perceptual processing, and can be related to the response profiles of neuronal populations \citep{Kwon2008,Goris2013}.
+However, its parameters are quite unconstrained by our data.
+Our Bayesian analysis shows that the parameters are highly correlated with one another and that the posterior is highly non-Gaussian.
+Because of this, any interpretation of the contribution of individual model parameters in determining task performance will be heavily dependent on the prior distributions used.
+As an example from our dataset, if the parameter $p$ was strongly constrained to be around $2$, then the $rmax$ parameter will not be much greater than $9$ (see Figure \ref{fig:posterior_transducer}, top right panel).
+This result could be anticipated from the dependencies between parameters in the model \citep{Yu2003,Haun2009}.
+In additional testing using simulated data and maximum likelihood fitting (available upon request), we have found that wildly different combinations of these four parameters can lead to similar likelihood estimates.
+Unless parameters are regularised and constrained using prior information, model parameters could be unstable but produce little variation in overall predictive performance: the unconstrained models are not uniquely identifiable from our data.
+
+Is this identifiability problem true for all contrast discrimination datasets?
+\citet{Wichmann1999} conducted an extensive investigation of several variants of contrast processing models, including energy detection, nonlinear transduction and divisive gain control.
+All parameters in the models could be identified with low variance by fitting to an extensive dataset of classical 2AFC contrast discrimination data \citep[see also][]{Dold2012}.
+Furthermore, differentiation of different nested contrast processing models was achieved based on the Akaike Information Criterion \citep[AIC;][]{Akaike1974}.
+It is therefore not always the case that the parameters of nonlinear contrast processing models cannot be constrained by data.
+Nevertheless, we believe that our Bayesian analysis of one variant of such a model could encourage future researchers to consider the interdependence of the model parameters and the degree to which they can be constrained by data.
+We speculate that ours is not the only contrast discrimination dataset resulting in a relatively flat likelihood surface for these models.
+
+Interestingly, the slope of psychometric functions for detection are steeper than those for discrimination when the pedestal contrast is at the trough of the dipper \citep[if performance is plotted against $\Delta \mathrm{c}$,][]{Nachmias1974, Foley1981, Wichmann1999}, meaning that the shape of the TvC function depends on the performance level defined as threshold \citep[see also][]{GarciaPerez2007}.
+\citet{Wichmann1999} suggests that differentiating the models depended on using information over the entire psychometric function \citep[see also][]{Green1960}.
+This result implies that researchers seeking to compare models of contrast processing should collect full psychometric functions for each pedestal contrast, rather than relying on adaptive methods that seek to estimate only the threshold (and do not constrain the slope).
+
+As discussed in the Introduction, contrast gain control plays a critical role in contrast processing for all but the simplest stimulus conditions \citep{Morrone1982,Heeger1992,Geisler1992,Foley1994, Meese2002, Holmes2004, Meese2007, Bex2007, Bex2009, Haun2010, Haun2013a}.
+It is therefore unsurprising that the four-parameter contrast processing model we use in this paper does a poor job of fitting the data --- it does not explicitly include any cross-scale gain control, nor is orientation or any temporal information considered in the model. 
+However, given that even this four parameter model was not constrained by our data, adding more parameters (such as gain control weights for each scale) without including strong priors will make the models even harder to constrain. 
+This is what we found when we attempted to fit some such models in pilot analyses, and so we chose to only present the simplest version here.
+
+\subsection{GLM incorporating other predictors}
+
+One long-term aim of modelling the early visual system might be to account for results in an experiment like ours.
+Such a model would necessarily combine a variety of factors that contribute to the observers' behaviour, including the experimental manipulations (contrast increment), image content, the observers' eye movements, and even factors such as the high-level scene content (objects, faces).
+Section \ref{sec:results_III} presents a rudimentary example of such a combined model.
+We extended the logistic GLM to include eye movement and image properties, and also allowed the intercept (threshold) to vary with spatial frequency; this extended model was fit to the entire data set.
+
+Like the GLM in Section \ref{sec:results_II}, this model was relatively well constrained (Figure \ref{fig:full_glm}).
+The thresholds changed with the target spatial band in a manner consistent with the typical contrast sensitivity function, with a peak approximately in the 0.75--3 cpd range (Figure \ref{fig:full_glm}~B).
+An additional interesting aspect of this model concerns the influence of image structure on performance.
+When considered in isolation in the exploratory data analysis section, geometric invariant K (loosely, a measure of edge density) was positively correlated with task performance: as edge density increased so did performance (Figure \ref{fig:image_features_K}).
+However, when this predictor was included in the expanded GLM, its coefficient became reliably negative.
+That is, as edge density increases performance decreases.
+
+Why does this reversal of sign occur?
+In the expanded GLM, the variability in performance associated with contrast at the target location and the magnitude of the increment can be taken into account by including both the pedestal contrast and the increment contrast in the model.
+That is, as edge density increases performance gets worse \textit{at a given level of pedestal contrast}.
+This result corroborates that shown by \citet{Bex2009}, who found that threshold contrast for increment detection in static natural images was higher (i.e. sensitivity decreased) as the local edge density increased.
+Note however that making this comparison must be treated cautiously, since here the pedestal contrast and the local edge density are correlated.
+Trials in which the local edge density was ``low'' also tended to have lower pedestal contrasts.
+Therefore, differences in these estimates may be driven in part by a lack of data at high pedestal contrasts when edge density is low, and vice versa.
+Similarly, it is possible that edge density is related to the correlation in contrast across spatial scales, in that image patches with more edges show higher cross-scale contrast correlations. 
+In a gain control model, higher cross-scale contrast correlations would produce stronger masking, potentially accounting for the effect of edge density here
+\footnote{We credit Andrew Haun for this suggestion.}.
+
+As mentioned above, a hypothetically complete model of early visual processing should account for all the relationships observed in our exploratory analysis.
+The GLM we present as a first step towards this goal is therefore certainly wrong.
+It treats all relationships as linear (in the logit).
+It fits one slope to pedestal contrast and one to increment contrast for the entire data set (only the intercept varies across spatial frequency conditions).
+From Figure \ref{fig:explore_performance} we know that the slope \textit{does} change across spatial frequencies.
+A more complete model would account for this.
+The GLM also does not include many of the predictors we found to influence performance, such as the direction and timing of saccades relative to the target (Figure \ref{fig:em_multipanel}~D and Figure \ref{fig:em_timings}).
+More fundamentally, the GLM is an atheoretical model that makes only indirect assumptions about mechanisms of the early visual system, and takes pre-processed feature vectors rather than image sequences as its input.
+On the other hand, GLMs can be extended to a multilevel framework (with a population level over subjects, as we have done here) relatively uncontroversially, whereas it is less clear how to specify population-level hyperpriors over the parameters of the nonlinear transducer.
+Overall we believe it is useful to present the GLM model here to encourage further exploration and model comparison for this and similar data sets.
+
+
+\subsection{Relationship to existing literature on contrast discrimination}
+
+A vast number of studies have measured contrast increment detection performance under a variety of experimental conditions. 
+Here we discuss several studies in greater detail.
+
+\citet{Henning2007} measured contrast discrimination performance for sinusoidal signals and pedestals that were temporally interleaved with noise (i.e. the noise mask was presented on every second frame). 
+In broadband noise, performance was worse overall compared to discrimination in no noise but the dipper shape of the TvC function remained. 
+When the noise contained a 1.5 octave notch around the signal frequency (i.e. had attenuated power at these frequencies) the dipper shape disappeared.
+The dipper shape returned again if only the low-pass or high-pass borders of the notch stimulus were included.
+\citet{Henning2007} suggest that these results cannot be explained by a single-channel nonlinear transducer model, an uncertainty model, or a standard gain control model, but instead that the results are consistent with off-frequency looking (assuming the notched noise prevents off-frequency looking).
+
+\citet{Goris2009} account for these results by incorporating linear-nonlinear units whose responses are normalised (gain control). 
+In broadband noise, the dipper remains because on average across trials the relative activations of the excitatory and inhibitory components of the divisive normalisation model are the same.
+In notched noise, the excitatory component is constant (driven only by the signal plus pedestal) whereas the activity of the inhibitory gain pool is higher and more variable over trials.
+An updated model enforcing optimal weighting \citep{Goris2013} does not predict these data, suggesting that human observers use a suboptimal decision rule under these conditions.
+That is, humans do not combine the output of the channels in a way that will maximise their performance from the available information.
+There may be an important component of perceptual learning here: observers may require deterministic input (such as in simple grating experiments) to tune population decoding for a given task. 
+When stimuli are stochastic (as in noise paradigms, and our experiment is an extreme example), observers cannot learn a close-to-optimal readout \footnote{We credit Felix Wichmann with this suggestion.}.
+
+What would the \citet{Goris2009} model predict for noise whose spectrum is $1/f$ (i.e. closer on average to the natural scenes used in our experiment)?
+While \citet{Goris2009} do not examine responses of their model to $1/f$ noise, that the dipper returns in low-pass noise \citep{Henning2007} suggests that $1/f$ noise might also be expected to show a dipper effect, because the responses of channels sensitive to high frequencies are less masked in $1/f$ noise relative to low frequency channels and so could still be informative about the presence of the signal.
+This is indeed what \citet{Haun2010} report: the dipper effect remains in $1/f$ noise, albeit its depth is reduced and the masking part of the function is more shallow relative to narrowband noise.
+
+Recently, \citet{Alam2014} measured the contrast threshold required to detect a Gabor-like target (of 3.9 cpd) imposed on a static natural image background. 
+They find that observers were most sensitive when the Gabor structure was imposed on relatively blank patches, less sensitive for patches containing simple edges, still less sensitive for patches containing dense structure or textures, and least sensitive for dark patches.
+They applied a contrast processing model similar to that of \citet{Watson1997}, including a band-limited channel decomposition and contrast gain control, to predict thresholds.
+The parameters were drawn from previous research rather than being fit to the data.
+The model appears to perform remarkably well over most images --- though we would be interested to see the model evaluated against a descriptive GLM-like model in terms of likelihood or information gain.
+The biggest differences between this paper and our efforts here are that \citet{Alam2014} evaluate detection performance for a target known to the observer (its orientation and spatial frequency), with foveal viewing (a static spatial 3AFC paradigm), whose structure is imposed on the image (rather than focusing on existing image structure).
+Furthermore, in that paper the model fits are evaluated against threshold values alone rather than against all individual trials, as we do here.
+We believe this paper provides an excellent complimentary dataset to our own, and would be interested to see the extent to which extended contrast processing models predict both datasets.
+
+Finally, \citet{Bradley2014} recently presented an impressively general model to predict the contrast detection thresholds of targets presented in the central 10 degrees of the visual field, on arbitrary greyscale backgrounds (including natural images).
+As for \citet{Alam2014}, we would be interested to see the predictions of this model for the data we present here. 
+However, the \citet{Bradley2014} model predicts detection thresholds in a task where both the form of the target (e.g. a vertical Gabor) and its location in the scene are known to the observer. 
+These conditions are quite unlike our experiment, where both the target location and its spatial structure are unknown before the trial. 
+Therefore, while their model is designed to account for performance under a wide range of conditions, it would require additional extension to be able to predict performance in our task.
+
+\subsection{Model estimation and comparison}
+\label{sec:discussion_model_estimation_comparison}
+
+In this paper we employ a Bayesian approach to model fitting, utilising MCMC methods to estimate the posterior distribution over model parameters.
+In doing so we attempt to adhere to the general philosophy advocated by \citet{Gelman2012a}: ``\textit{the model}, for a Bayesian, is the combination of the prior distribution and the likelihood, each of which represents some compromise among scientific knowledge, mathematical convenience and computational tractability... we make some assumptions, state them clearly, see what they imply, and check the implications'' (p. 20).
+We treat prior distributions not as subjective measures of personal beliefs, but as a way to condition and restrict maximum likelihood estimates similar to, for example, regularised regression \citep{Hastie2009}. 
+This approach allowed us to demonstrate the interdependence of the parameters in the models and to test the effect of imposing stronger constraints on the parameters within the same modelling framework (see e.g. Figure \ref{fig:posterior_transducer}).
+We believe the flexibility and computational power of this approach offers many opportunities for useful application in vision science.
+
+We have compared models using crossvalidation, in which the model is fit to one part of the data and its predictions for the unseen ``test'' data are evaluated.
+Models can then be compared on their relative prediction performance (see e.g. Figure \ref{fig:crossval_I}).
+Other possibilities for model comparison include methods based on overall model likelihood, such as the Akaike Information Criterion \citep[AIC;][]{Akaike1974} and the (so-called) Bayesian Information Criterion \citep[BIC;][]{Schwarz1978, Raftery1995}, or Bayesian methods such as Bayes Factors \citep[e.g.][]{Kass1995, Lee2014}.
+Likelihood-based methods penalise the overall model likelihood by some measure of the model's complexity (number of free parameters). 
+These criteria therefore trade-off model \textit{fit} with \textit{parsimony} and by extension generalisability.
+A Bayes factor is the ratio of the marginal posterior probability of two models, and also includes a natural preference for parsimony since models are penalised for complexity by spreading posterior mass over more parameters (dimensions in the posterior).
+
+We chose to compare models based on crossvalidation here because while being computationally intensive, it is perhaps the most easily-interpreted route to estimating expected predictive accuracy for unseen data \citep{Gelman2014}, particularly when comparing models of radically different structure. 
+Crossvalidation also contains an implicit penalty for model complexity: complex models with too many parameters will fit noise in the training set, leading to poorer performance in the test set (i.e., poor generalisability to new data). 
+Purely likelihood-based methods such as the AIC are not ideal for Bayesian methods of model fitting since the notion of how many parameters are ``free'' is not clear (a strong prior distribution can considerably restrict the posterior range of a parameter even though it is still fit to data).
+This is particularly true for multilevel models, like the one used in Section \ref{sec:results_III}.
+While Bayes factors are theoretically appealing, their actual estimation can be greatly affected by the specification of the priors over the model parameters:
+priors that have almost no influence on the posterior of a parameter within a model can have considerable effect on Bayes factors \citep{Gelman2012a}.
+It is therefore important to ensure that the prior support of all models is equally (un)restrictive for any Bayesian model comparison attempt. 
+For models with different structures (as in the nonlinear transducer and GLMs reported here) this is difficult to do \citep[but not impossible by using a sensitivity analysis;][]{Lee2014}.
+If one is interested in predictive performance, we find the conceptually straightforward crossvalidation approach more appealing.
+
+
+\subsection{Caveats and limitations}
+
+Perhaps the most important caveat to bear in mind when considering our results is that our task is very different to that of a classical contrast discrimination experiment.
+In classical situations the observer usually has full knowledge of the appearance of the target they are trying to detect, and minimal uncertainty about the target's possible location in space and time.
+In contrast, the appearance of the target in our experiment depends on the image content at the target location, and its presentation was both spatially and temporally uncertain.
+Our observers were able to engage in an attentionally-demanding task (watching a television series) in addition to the experimental task (reporting the location of the image modification).
+The requirement to report the location of the target in retinal coordinates could lead to errors despite observers having definitely seen the target, depending on the timing and direction of eye movements \citep[geotopic mislocalisation;][]{Dorr2013}.
+Performance therefore depends on many extraneous factors whose influence is intentionally minimised in classical experiments, making it difficult to interpret the overall relationship of our results to classical spatial vision research.
+
+While our analysis in Section \ref{sec:results_II} primarily considered the contrast at the target location and the size of the increment applied, it is likely that observers also use other cues to detect the target location. 
+For example, eye movements will cause unnatural temporal signals due to the movement of the spatiotemporal contrast envelope across the (normally relatively static) scene.
+It is therefore possible that observers utilise a temporal rather than a spatial signal. 
+This particular hypothesis seems unlikely to be the primary signal observers utilise since their performance was better when their eyes remained relatively static (see Figure \ref{fig:em_multipanel}~C).
+Nevertheless, it is worth keeping in mind that cues other than those we have considered here will undoubtedly affect performance.
+
+Third, since our contrast increments were multiplicative, our paradigm cannot measure detection performance.
+That is, if the target location happens to contain no contrast (i.e. is a uniform field) then there will also be no contrast increment to detect.
+While we made this design decision to avoid imposing unnatural structure (e.g. a Gabor-like target) on the target movie, it also means that our ability to measure performance in the low-contrast pedestal range is limited. 
+This is likely an important contributing factor to the inability of our dataset to constrain the nonlinear transducer model. 
+Note however than even imposing a model shape by setting strong priors on the parameters did not (and in fact, worsened) predictive power.
+Furthermore, large regions of very low contrast (e.g.\ during scene cuts) occurred rarely in our professionally-produced video material (21 trials with exactly zero contrast); additionally, observers typically gaze at image regions with relatively more image structure \citep{ReZa99,ViDoMaBa12}, and thus target patches also typically contain non-zero contrast due to spatial correlations in natural scenes \citep{Simo97,ZeBaWe93a}.
+
+While the movies used in our task contain ``naturalistic'' structure, the videos are highly post-produced.
+This is therefore by no means a perfect representation of the natural input of our observers' visual system. 
+On the other hand, watching television itself can be considered to be a common and highly-practiced behaviour.
+We believe the results are a useful step in the use of more naturalistic stimuli.
+
+Finally, thought must be given to the observer model for our task.
+In a classical contrast discrimination paradigm, the observer sees one interval containing the pedestal plus the increment and one interval containing the pedestal alone.
+The observer therefore explicitly compares two (or more, for the \textit{m}AFC case) pieces of sensory evidence.
+\citet{Bex2007} provide a direct analogue of this scenario for detection in (static) natural scenes.
+In our analysis, we define the \textit{pedestal} as the contrast in the unmodified video sequence at the target location.
+In contrast to the classical case, in our experiment the observer is never shown the pedestal-only interval, and the pedestals in the non-target locations are not the same as that in the target location.
+Observers' judgements in our task could be conceived as a comparison to an internal standard for ``naturalness''. 
+The observer sees four intervals (possible target locations) and compares each one to what the observer expects the natural contrast in that location to be.
+One decision strategy is to pick the location that most violates the observer's expectation.
+Since contrast in natural scenes is correlated over space \citep{Simo97,ZeBaWe93a,Tkacik2011}, the expectation could be based on the scene information surrounding the patch: the surrounding image structure may act as a spatially-extended pedestal.
+If this is the case, we think it is reasonable to employ the analyses for classical contrast discrimination experiments as we have done here, even though the observer models are not the same.
+
+\section{Conclusion}
+
+We have collected a contrast increment detection dataset with gaze contingent targets in naturalistic movies and summarised the most striking results. 
+By estimating the posterior distribution over model parameters, we show that a version of the standard nonlinear transducer model for contrast discimination is not well constrained by our data, whereas an atheoretical logistic GLM fares better.
+We present one way in which models could be extended to include additional non-contrast features.
+
+We believe that mechanistic models of early visual processing are a useful and principled way to test hypotheses about the representations and transformations applied by the visual system.
+However, they often contain many free parameters, and we believe that constraining these parameters requires fitting and prediction over a wide range of data sets.
+The Bayesian methods we have employed here are powerful \citep[allowing for detailed model analysis, see for example][]{Lee2014, Kruschke2011a} and general (seemlessly extendable to a wide range of model classes, such as the multilevel models we use here), and we hope that other researchers will consider using them.
+To facilitate re-use of our data and analyses, we have made both available for download (see Appendix).
+In addition, we hope that others will consider comparing the performance of mechanistic models to descriptive, simple and atheoretical models (such as GLMs) to quantify the information gain provided by mechanistic complexity in a principled way. 
+
+
+
+\section*{Acknowledgements}
+
+Designed the experiment: MACD, PB, TSAW.
+Programmed the experiment: MACD.
+Collected the data: MACD.
+Analysed the data: TSAW.
+Wrote the paper: TSAW, MACD, PJB.
+The authors thank Andrew Haun and Felix Wichmann for many useful suggestions after a close reading of an earlier version of this manuscript, and Simon Barthelm\'{e} for suggesting we look further into GLMs.
+Remaining errors and misinterpretations are our own.
+TSAW was supported by the National Health and Medical Research Council of Australia (NHMRC training fellowship 634560) and an Alexander von Humboldt Postdoctoral Fellowship.
+PJB was supported by NIH grants EY019281 and EY018664.
+MD was supported by the Elite Network Bavaria, funded by the Bavarian State Ministry for Research and Education.
+
+
+\section{Appendix}
+
+Here we outline details of our fitting procedures and the structure of the models presented in the paper.
+The analyses were implemented using the free software package R with other free libraries.
+The code and data set for reproducing all analyses in this paper are available from the first author's Github page (\url{https://github.com/tomwallis/gcd_contrast}).
+The data set we provide online includes numerous features (e.g. local average pixel intensity, a number of additional geometric invariants, additional eye movement characteristics) not considered in this paper.
+We encourage interested readers to explore the data set themselves.
+
+\subsection{Nonlinear transducer model structure}
+\label{app:nonlinear_priors}
+
+In Section \ref{sec:results_II} we fit two versions of a nonlinear transducer model with four parameters for each subject.
+The two versions differed in their priors.
+The parameters of the models were $p$, $q$, $z$ and $rmax$ (see Equation \ref{eq:nonlinear_transducer}).
+
+The following priors were used in Transducer model A for each subject.
+We placed priors over the marginal distributions of the parameters (thus assuming that the parameters were independent \textit{a priori}).
+All four parameters were given a lower bound of zero.
+This ensured the relationship between response and contrast was positive.
+Parameter $z$ was given a uniform prior bounded 0--1, and $rmax$ was given a uniform prior bounded 0--100.
+Parameter $p$ was given a Gaussian (normal) prior with mean 2 and standard deviation 1, and parameter $q$ was given a normal prior with mean 0.4 and standard deviation 0.2.
+That is, the prior variances were set to the mean divided by 2.
+The means of these parameters were picked to conform to the standards used in the literature to produce the ``dipper effect'' whereas the variance was picked to ensure the priors were reasonably weakly centred over the means, giving the data opportunity to influence the model.
+The lower asymptote $\gamma$ was fixed at chance performance, 0.25.
+
+In contrast, Transducer model B had strong priors over all marginal parameters except $z$, which retained the same 0--1 uniform distribution.
+The parameters were bounded as in Transducer A.
+The prior over $rmax$ was a normal distribution with mean 10 and standard deviation 0.1, the prior over $p$ was normal with mean 2 and sd 0.02, and over $q$ was normal with mean 0.4 and sd 0.004.
+That is, the prior variances were set to the mean divided by 100, which we intended to strongly constrain the posterior distribution around the mean values.
+While the value of 100 was picked arbitrarily, the results show that we achieved our intended target.
+
+\subsection{GLM model structure}
+\label{app:glm_priors}
+
+Two variants of a GLM were fit in Section \ref{sec:results_II}.
+The first was a single level GLM in which the coefficients for each subject were estimated independently.
+In this model, each coefficient $\beta_{i,j}$ for subject $i$ and predictor $j$ was bounded to the range -5 to 5 and given a normal distribution prior with a mean of zero and a standard deviation of 2.
+These values were chosen to represent quite weak priors centred over zero (i.e. no effect).
+Note that the predictors were standardised (z-transformed) after taking their log, so these coefficients represent the weighting of standardised log units.
+
+The second model included multilevel structure that related the subject coefficients via a population distribution over the coefficient values.
+Each subject-level coefficient $\beta_{i,j}$ was unbounded.
+The population-level mean for each predictor variable $j$ is denoted $\mu_{j}$ and the population standard deviation for each predictor variable is denoted $\sigma_{j}$.
+These hyperparameters were bounded between -5 to 5 and 0 to 10 respectively.
+The population means $\mu_j$ were given normal distribution priors with a mean of 0 and a standard deviation of 1.
+The standard deviation $\sigma_j$ priors were half-Cauchy distributions, with mean 0 and sd 1.
+These values were picked to make the subject-level estimates close to one another, since the bulk of the prior density is centred over zero (i.e. no variance between subjects).
+This represents a conservative assumption, common in psychophysics, that the subjects do not differ greatly.
+We feel this is appropriate here since we have only 5 subjects and that the amount of trials from each subject varies.
+
+To aid model convergence we parameterise the subject-level coefficients as a unit-normal offset variable that is then shifted by the population mean and scaled by the population standard deviation to produce the final coefficient estimate \citep{Papaspiliopoulos2007,StanDevelopmentTeam2014}.
+That is, each individual subject parameter $\beta_{i,j}$ is given by:
+
+\begin{equation}
+\beta_{i,j} = \mu_{j} + \epsilon_{i,j} \sigma_{j}
+\end{equation}
+
+where $\epsilon_{i,j}$ is the offset for each subject, for each coefficient.
+Each $\epsilon_{i,j}$ was given a unit normal prior distribution.
+
+The expanded GLM (Section \ref{sec:results_III}) had an identical structure to the multilevel GLM from Section \ref{sec:results_II} with the exception that we lowered the upper bound on the population standard deviation from 10 to 5 due to initialisation problems with the expanded model.
+This impacts the estimates only slightly, since the posterior mass is concentrated between 0 and 1 for this parameter due to the half-Cauchy prior.
+
+\subsection{MCMC sampling parameters}
+\label{app:sampling}
+
+Both transducer models were fit using four independent chains sampled 100,000 times each, of which the first 50,000 samples were treated as a warm-up phase to adapt the sampler.
+To reduce autocorrelation in the samples and to reduce file size we saved every 40th sample, producing 1250 post-warmup samples per chain to total the 5000 samples analysed above.
+These sampling parameters produced good chain mixing and convergence results for both models.
+
+The single level GLM in Section \ref{sec:results_II} was fit using 20,000 samples per chain of which the first 10,000 were discarded (adaptation), and every 8th sample was saved to produced 1250 final samples per chain.
+The multilevel GLM was sampled for longer since this model took longer to converge; the sampling parameters for the multilevel model were the same as for the transducer models.
+The expanded GLM (Section \ref{sec:results_III}) was also sampled using these parameters.
+
+The 5-fold crossvalidations reported in Section \ref{sec:results_II} are based on 50,000 samples (25,000 warmup) saving every 100th sample to produce 250 samples per chain for a total of 1000 samples that were used to calculate the posterior mean for prediction.
+
+\subsection{Approximation to d prime function}
+\label{app:dprime_approx}
+
+Evaluating the integral determining proportion correct in a SDT framework with four alternatives (Equation \ref{eq:sdt_mafc}) is costly to implement in Stan.
+Instead we approximated this function using a Weibull curve:
+
+\begin{equation}
+\label{eq:p_weibull}
+\mathrm{p(correct)} = \frac{1}{m} + (1 - \frac{1}{m}) (1 - \exp( - (\Delta_R / \lambda)^k)
+\end{equation}
+
+for scale $\lambda$ and shape $k$.
+These parameters were set to 1.545903 and 1.481270 respectively by minimising the squared difference between the Weibull and equation \ref{eq:sdt_mafc}.
+It offers a reasonable approximation over the range of informative $d^\prime$ values (see Figure \ref{fig:weibull_approx}).
+
+%%%% weibull approx.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/link_functions.pdf}
+\end{center}
+\caption{
+Comparison of the SDT link function and our Weibull approximation.
+}
+\label{fig:weibull_approx}
+\end{figure}
+
+
+\subsection{Relationship between pixel intensity and performance}
+\label{app:pixel_intensity}
+
+In this paper we have primarily considered the relationship between the contrast in the target location and performance at detecting a contrast increment.
+However, it is also useful to consider whether the raw pixel intensities (related to luminance) are also associated with performance.
+
+%%%% luminance and performance approx.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=1]{figs/luminance_statistics.pdf}
+\end{center}
+\caption{
+Relationship between pixel intensity and performance.
+\textbf{A:} Bivariate relationship between mean pixel intensity at the target location and contrast. 
+Data points are aggregated into hexagonal bins to reduce overplotting; lighter bins represent more samples. 
+The rank-order correlation coefficient is 0.21.
+\textbf{B:} Two spline fits between pixel intensity and performance (cubic splines with 5 knots).
+The solid line shows the relationship across all trials, whereas the dashed fit shows the same fit to trials with pedestal contrasts between 0.01 and 0.05.  
+When contrast is held within a nonzero range, the relationship between luminance and performance is largely abolished. 
+\textbf{C:} For the same subset of the data shown by the dashed fit in Panel B, the relationship between contrast and performance remains.
+}
+\label{fig:luminance_statistics}
+\end{figure}
+
+Figure \ref{fig:luminance_statistics} shows the relationship between pixel intensity, contrast and performance.
+Panel A suggests that pixel intensity and contrast are mostly related by the fact that when luminance is near zero, so too is contrast.
+
+If we consider the relationship between pixel intensity and performance across all trials (solid fits Panel B), it is clear that performance is worse if the average pixel intensity at the target location is relatively low or high. 
+Of course, if the average pixel intensity is near-dark or near-bright, the contrast will also tend to be low.
+Can the relationship between pixel intensity and performance be explained by covariance with contrast?
+
+The dashed fit in Panel B shows the relationship between luminance and performance for all trials with pedestal contrasts between 0.01 and 0.05. 
+When contrast is held within a nonzero range, the relationship between luminance and performance is largely abolished. Panel C shows the relationship between performance and contrast for this subset of the data, demonstrating that contrast and performance are still related. 
+
+Thus, the luminance at the target location does not seem to be uniquely important for predicting performance, beyond its relationship to contrast. 
+This result could perhaps be anticipated from the results of \citet{Mante2005}, who show both that luminance and contrast are largely independent in natural scenes, and that luminance gain control is largely independent of contrast gain control. 
+
+
+\subsection{Contrast masking and average performance}
+\label{app:contrast_masking}
+
+Figure \ref{fig:explore_performance} shows that performance in trials with ``high'' contrast at the target location was better than trials with ``low'' contrast at the target location.
+Yet, our analysis in Section \ref{sec:results_II} shows stereotypical contrast masking effects at higher contrast levels, in that a contrast increment thresholds are larger as pedestal contrast increases. 
+How do these effects fit together?
+
+The reason for this apparent discrepancy is that Figure \ref{fig:explore_performance} shows performance as a function of the multiplication factor. 
+We chose this representation to demonstrate the range of performances elicited by our raw manipulation of the video signal. 
+However, contrast discrimination performance is usually considered in terms of the increment: the \textit{difference} in contrast between the absolute contrast of the target and the pedestal.
+
+\begin{figure}[H]
+\includegraphics[scale=1]{figs/increment_vs_performance.pdf}
+\centering
+\caption{
+Performance as a function of the increment contrast for observer S1 in the 1.5--3 cpd condition.
+Target band energy is binned as in Figure \ref{fig:explore_performance}.
+Curves and shaded regions show the fits and confidence regions of smoothing splines (cubic spline with 5 knots, GAM with a logistic link function).
+Dashes in lower x-axis show the distribution of increment values for the “low” condition, dashes in upper x-axis show increment values for “high” pedestal contrasts.
+}
+\label{fig:performance_by_increment}
+\end{figure}
+
+To demonstrate the relationship between these representations, we replot the performance of observer S1 in the 1.5-3 cpd condition as a function of the increment contrast (i.e. pedestal $\times$ multiplication factor $-$ pedestal). 
+Figure \ref{fig:performance_by_increment} shows that the ``high'' pedestal contrasts have more data points at higher increment values -- and consequently higher average performance than the ``low'' pedestal contrasts.
+Where the increments overlap between the pedestal contrast bins, however, performance in the ``low'' condition is better than in the ``high'' condition. 
+That is, when the pedestal contrast is high, a larger contrast increment is required to reach the same level of performance as when the pedestal is low.
+This is contrast masking.
+
+
+
+\newpage
+\bibliography{library,additional}
+\end{document}

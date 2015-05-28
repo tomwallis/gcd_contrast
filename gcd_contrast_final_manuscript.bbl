@@ -1,0 +1,622 @@
+\begin{thebibliography}{}
+
+\bibitem[Adelson and Burt, 1981]{Adelson1981}
+Adelson, E.~H. and Burt, P.~J. (1981).
+\newblock Image data compression with the {Laplacian} pyramid.
+\newblock In {\em Proceedings of the {Conference} on {Pattern} {Recognition}
+  and {Image} {Processing}}, pages 218--223, Los {Angeles}.
+
+\bibitem[Agostinelli and Lund, 2013]{Agostinelli2013}
+Agostinelli, C. and Lund, U. (2013).
+\newblock R package circular: {Circular} {Statistics} (version 0.4-7).
+
+\bibitem[Akaike, 1974]{Akaike1974}
+Akaike, H. (1974).
+\newblock A new look at the statistical model identification.
+\newblock {\em {IEEE} {Transactions} on {Automatic} {Control}}, 19(6):716--723.
+
+\bibitem[Alam et~al., 2014]{Alam2014}
+Alam, M.~M., Vilankar, K.~P., Field, D.~J., and Chandler, D.~M. (2014).
+\newblock Local masking in natural images: {A} database and analysis.
+\newblock {\em Journal of {Vision}}, 14(8):22--22.
+
+\bibitem[Balboa and Grzywacz, 2000]{Balboa2000}
+Balboa, R.~M. and Grzywacz, N.~M. (2000).
+\newblock Occlusions and their relationship with the distribution of contrasts
+  in natural images.
+\newblock {\em Vision {Research}}, 40(19):2661--2669.
+
+\bibitem[Balboa and Grzywacz, 2003]{Balboa2003}
+Balboa, R.~M. and Grzywacz, N.~M. (2003).
+\newblock Power spectra and distribution of contrasts of natural images from
+  different habitats.
+\newblock {\em Vision {Research}}, 43(24):2527--2537.
+
+\bibitem[Barth and Watson, 2000]{Barth2000}
+Barth, E. and Watson, A. (2000).
+\newblock A geometric framework for nonlinear visual coding.
+\newblock {\em Optics {Express}}, 7(4):155--165.
+
+\bibitem[Bex, 2010]{Bex2010}
+Bex, P.~J. (2010).
+\newblock ({In}) sensitivity to spatial distortion in natural scenes.
+\newblock {\em Journal of {Vision}}, 10(2):23.1--15.
+
+\bibitem[Bex and Makous, 2002]{BeMa02}
+Bex, P.~J. and Makous, W. (2002).
+\newblock Spatial frequency, phase, and the contrast of natural images.
+\newblock {\em J. Opt. Soc. Am. A}, 19(6):1096--1106.
+
+\bibitem[Bex et~al., 2007]{Bex2007}
+Bex, P.~J., Mareschal, I., and Dakin, S.~C. (2007).
+\newblock Contrast gain control in natural scenes.
+\newblock {\em Journal of {Vision}}, 7(11):12--12.
+
+\bibitem[Bex et~al., 2009]{Bex2009}
+Bex, P.~J., Solomon, S.~G., and Dakin, S.~C. (2009).
+\newblock Contrast sensitivity in natural scenes depends on edge as well as
+  spatial frequency structure.
+\newblock {\em Journal of {Vision}}, 9(10):1.1--19.
+
+\bibitem[Blakemore and Campbell, 1969]{Blakemore1969}
+Blakemore, C. and Campbell, F.~W. (1969).
+\newblock On the existence of neurones in the human visual system selectively
+  sensitive to the orientation and size of retinal images.
+\newblock {\em The {Journal} of {Physiology}}, 203:237--260.
+
+\bibitem[Bradley et~al., 2014]{Bradley2014}
+Bradley, C., Abrams, J., and Geisler, W.~S. (2014).
+\newblock Retina-{V}1 model of detectability across the visual field.
+\newblock {\em Journal of {Vision}}, 14(12):22--22.
+
+\bibitem[Caelli and Moraglia, 1986]{Caelli1986}
+Caelli, T. and Moraglia, G. (1986).
+\newblock On the detection of signals embedded in natural scenes.
+\newblock {\em Perception \& psychophysics}, 39(2):87--95.
+
+\bibitem[Campbell and Robson, 1968]{Campbell1968}
+Campbell, F.~W. and Robson, J.~G. (1968).
+\newblock Application of {Fourier} analysis to the visibility of gratings.
+\newblock {\em The {Journal} of physiology}, 197(3):551--566.
+
+\bibitem[Cannon and Fullenkamp, 1991]{Cannon1991}
+Cannon, M.~W. and Fullenkamp, S.~C. (1991).
+\newblock A transducer model for contrast perception.
+\newblock {\em Vision {Research}}, 31(6):983--998.
+
+\bibitem[Chandler et~al., 2009]{Chandler2009}
+Chandler, D.~M., Gaubatz, M.~D., and Hemami, S.~S. (2009).
+\newblock A {Patch}-{Based} {Structural} {Masking} {Model} with an
+  {Application} to {Compression}.
+\newblock {\em {EURASIP} {Journal} on {Image} and {Video} {Processing}},
+  2009:1--22.
+
+\bibitem[David et~al., 2004]{David2004}
+David, S.~V., Vinje, W.~E., and Gallant, J.~L. (2004).
+\newblock Natural stimulus statistics alter the receptive field structure of v1
+  neurons.
+\newblock {\em Journal of {Neuroscience}}, 24(31):6991--7006.
+
+\bibitem[Deubel and Schneider, 1996]{Deubel1996}
+Deubel, H. and Schneider, W.~X. (1996).
+\newblock Saccade target selection and object recognition: {Evidence} for a
+  common attentional mechanism.
+\newblock {\em Vision research}, 36(12):1827--1837.
+
+\bibitem[Dold, 2012]{Dold2012}
+Dold, H. M.~H. (2012).
+\newblock {\em On modeling data from visual psychophysics: {A} {Bayesian}
+  graphical model approach}.
+\newblock {PhD}, Technische {Universitaet} {Berlin}.
+
+\bibitem[Dorr and Bex, 2013]{Dorr2013}
+Dorr, M. and Bex, P.~J. (2013).
+\newblock Peri-{Saccadic} {Natural} {Vision}.
+\newblock {\em Journal of {Neuroscience}}, 33(3):1211--1217.
+
+\bibitem[Dorr et~al., 2010]{DoMaGeBa10a}
+Dorr, M., Martinetz, T., Gegenfurtner, K., and Barth, E. (2010).
+\newblock Variability of eye movements when viewing dynamic natural scenes.
+\newblock {\em Journal of Vision}, 10(10):1--17.
+
+\bibitem[Eckstein et~al., 1997]{Eckstein1997}
+Eckstein, M.~P., Ahumada, A.~J., and Watson, A.~B. (1997).
+\newblock Visual signal detection in structured backgrounds. {II}. {Effects} of
+  contrast gain control, background variations, and white noise.
+\newblock {\em {JOSA} {A}}, 14(9):2406--2419.
+
+\bibitem[Field, 1987]{Field1987}
+Field, D.~J. (1987).
+\newblock Relations between the statistics of natural images and the response
+  properties of cortical cells.
+\newblock {\em Journal of the {Optical} {Society} of {America} {A}},
+  4(12):2379--2394.
+
+\bibitem[Foley, 1994]{Foley1994}
+Foley, J.~M. (1994).
+\newblock Human luminance pattern-vision mechanisms: masking experiments
+  require a new model.
+\newblock {\em Journal of the {Optical} {Society} of {America} {A}},
+  11(6):1710--1719.
+
+\bibitem[Foley and Legge, 1981]{Foley1981}
+Foley, J.~M. and Legge, G.~E. (1981).
+\newblock Contrast detection and near-threshold discrimination in human vision.
+\newblock {\em Vision {Research}}, 21(7):1041--1053.
+
+\bibitem[Frazor and Geisler, 2006]{Frazor2006}
+Frazor, R.~A. and Geisler, W.~S. (2006).
+\newblock Local luminance and contrast in natural images.
+\newblock {\em Vision {Research}}, 46(10):1585--1598.
+
+\bibitem[Freeman and Simoncelli, 2011]{Freeman2011a}
+Freeman, J. and Simoncelli, E.~P. (2011).
+\newblock Metamers of the ventral stream.
+\newblock {\em Nature {Neuroscience}}, 14(9):1195--1201.
+
+\bibitem[Garc\'{\i}a-P\'{e}rez and Alcal\'{a}-Quintana, 2007]{GarciaPerez2007}
+Garc\'{\i}a-P\'{e}rez, M.~A. and Alcal\'{a}-Quintana, R. (2007).
+\newblock The transducer model for contrast detection and discrimination:
+  formal relations, implications, and an empirical test.
+\newblock {\em Spatial {Vision}}, 20(1-2):5--43.
+
+\bibitem[Geisler, 2008]{Geisler2008}
+Geisler, W.~S. (2008).
+\newblock Visual {Perception} and the {Statistical} {Properties} of {Natural}
+  {Scenes}.
+\newblock {\em Annual review of psychology}, 59(1):167--192.
+
+\bibitem[Geisler and Albrecht, 1992]{Geisler1992}
+Geisler, W.~S. and Albrecht, D.~G. (1992).
+\newblock Cortical neurons: isolation of contrast gain control.
+\newblock {\em Vision {Research}}, 32(8):1409--1410.
+
+\bibitem[Geisler et~al., 2009]{Geisler2009}
+Geisler, W.~S., Najemnik, J., and Ing, A.~D. (2009).
+\newblock Optimal stimulus encoders for natural tasks.
+\newblock {\em Journal of {Vision}}, 9(13):17.1--16.
+
+\bibitem[Geisler and Perry, 2009]{Geisler2009a}
+Geisler, W.~S. and Perry, J.~S. (2009).
+\newblock Contour statistics in natural images: {Grouping} across occlusions.
+\newblock {\em Visual {Neuroscience}}, 26(01):109.
+
+\bibitem[Gelman, 2006]{Gelman2006a}
+Gelman, A. (2006).
+\newblock Multilevel ({Hierarchical}) {Modeling}: {What} {It} {Can} and
+  {Cannot} {Do}.
+\newblock {\em Technometrics}, 48(3):432--435.
+
+\bibitem[Gelman and Hill, 2007]{Gelman2007}
+Gelman, A. and Hill, J. (2007).
+\newblock {\em Data {Analysis} using regression and multilevel/hierarchical
+  models}.
+\newblock Cambridge {Univ} {Press}, New {York}, {NY}.
+
+\bibitem[Gelman et~al., 2014]{Gelman2014}
+Gelman, A., Hwang, J., and Vehtari, A. (2014).
+\newblock Understanding predictive information criteria for {Bayesian} models.
+\newblock {\em Statistics and {Computing}}, 24(6):997--1016.
+
+\bibitem[Gelman and Rubin, 1992]{Gelman1992}
+Gelman, A. and Rubin, D.~B. (1992).
+\newblock Inference from iterative simulation using multiple sequences.
+\newblock {\em Statistical {Science}}, 7(4):457--472.
+
+\bibitem[Gelman and Shalizi, 2012]{Gelman2012a}
+Gelman, A. and Shalizi, C.~R. (2012).
+\newblock Philosophy and the practice of {Bayesian} statistics.
+\newblock {\em British {Journal} of {Mathematical} and {Statistical}
+  {Psychology}}, 66(1):8--38.
+
+\bibitem[Goris et~al., 2009]{Goris2009}
+Goris, R., Wichmann, F.~A., and Henning, G. (2009).
+\newblock A neurophysiologically plausible population code model for human
+  contrast discrimination.
+\newblock {\em Journal of {Vision}}, 9(7):15.
+
+\bibitem[Goris et~al., 2013]{Goris2013}
+Goris, R. L.~T., Putzeys, T., Wagemans, J., and Wichmann, F.~A. (2013).
+\newblock A neural population model for visual pattern detection.
+\newblock {\em Psychological {Review}}, 120(3):472--496.
+
+\bibitem[Graham and Nachmias, 1971]{Graham1971}
+Graham, N. and Nachmias, J. (1971).
+\newblock Detection of grating patterns containing two spatial frequencies: a
+  comparison of single-channel and multiple-channels models.
+\newblock {\em Vision {Research}}, 11(3):251--259.
+
+\bibitem[Graham et~al., 1978]{Graham1978}
+Graham, N., Robson, J.~G., and Nachmias, J. (1978).
+\newblock Grating summation in fovea and periphery.
+\newblock {\em Vision {Research}}, 18(7):815--825.
+
+\bibitem[Green, 1960]{Green1960}
+Green, D.~M. (1960).
+\newblock Psychoacoustics and {Detection} {Theory}.
+\newblock {\em The {Journal} of the {Acoustical} {Society} of {America}},
+  32(10):1189.
+
+\bibitem[Hacker and Ratcliff, 1979]{Hacker1979}
+Hacker, M.~J. and Ratcliff, R. (1979).
+\newblock A revised table of d'for {M}-alternative forced choice.
+\newblock {\em Attention, perception \& psychophysics}, 26(2):168--170.
+
+\bibitem[Hansen and Hess, 2012]{Hansen2012}
+Hansen, B.~C. and Hess, R.~F. (2012).
+\newblock On the effectiveness of noise masks: {Naturalistic} vs.
+  un-naturalistic image statistics.
+\newblock {\em Vision {Research}}, 60:101--113.
+
+\bibitem[Hastie et~al., 2009]{Hastie2009}
+Hastie, T., Tibshirani, R., and Friedman, J. (2009).
+\newblock {\em The {Elements} of {Statistical} {Learning}}.
+\newblock Springer.
+
+\bibitem[Haun, 2009]{Haun2009}
+Haun, A.~M. (2009).
+\newblock {\em Contrast sensitivity in 1/f noise}.
+\newblock PhD thesis, University of {Louisville}.
+
+\bibitem[Haun and Essock, 2010]{Haun2010}
+Haun, A.~M. and Essock, E.~A. (2010).
+\newblock Contrast sensitivity for oriented patterns in 1/f noise: {Contrast}
+  response and the horizontal effect.
+\newblock {\em Journal of {Vision}}, 10(10):1.
+
+\bibitem[Haun and Peli, 2013]{Haun2013a}
+Haun, A.~M. and Peli, E. (2013).
+\newblock Perceived contrast in complex images.
+\newblock {\em Journal of {Vision}}, 13(13):3.
+
+\bibitem[Heeger, 1992]{Heeger1992}
+Heeger, D.~J. (1992).
+\newblock Normalization of {Cell} {Responses} in {Cat} {Striate} {Cortex}.
+\newblock {\em Visual {Neuroscience}}, 9(02):181--197.
+
+\bibitem[Henning and Wichmann, 2007]{Henning2007}
+Henning, G.~B. and Wichmann, F.~A. (2007).
+\newblock Some observations on the pedestal effect.
+\newblock {\em Journal of {Vision}}, 7(1):3.
+
+\bibitem[Hering, 1879]{Heri79}
+Hering, E. (1879).
+\newblock {\"U}ber die {M}uskelger{\"a}usche des {A}uges [on muscle sounds of
+  the eye].
+\newblock {\em Sitzberichte der kaiserlichen Akademie der Wissenschaften in
+  Wien. Mathematisch-naturwissenschaftliche Klasse}, 79:137--154.
+
+\bibitem[Hoffman and Gelman, 2014]{Hoffman2014}
+Hoffman, M.~D. and Gelman, A. (2014).
+\newblock The {No}-{U}-{Turn} {Sampler}: {Adaptively} {Setting} {Path}
+  {Lengths} in {Hamiltonian} {Monte} {Carlo}.
+\newblock {\em Journal of {Machine} {Learning} {Research}}, 15(Apr):1593--1623.
+
+\bibitem[Holmes and Meese, 2004]{Holmes2004}
+Holmes, D.~J. and Meese, T.~S. (2004).
+\newblock Grating and plaid masks indicate linear summation in a contrast gain
+  pool.
+\newblock {\em Journal of {Vision}}, 4(12):7--7.
+
+\bibitem[Kass and Raftery, 1995]{Kass1995}
+Kass, R.~E. and Raftery, A.~E. (1995).
+\newblock Bayes factors.
+\newblock {\em Journal of the {American} {Statistical} {Association}},
+  90(430):773--795.
+
+\bibitem[Kelly, 1984]{Kelly1984}
+Kelly, D.~H. (1984).
+\newblock Retinal inhomogeneity. {I}. {Spatiotemporal} contrast sensitivity.
+\newblock {\em Journal of the {Optical} {Society} of {America} {A}},
+  1(1):107--113.
+
+\bibitem[Knoblauch, 2014]{knoblauch2014}
+Knoblauch, K. (2014).
+\newblock {\em psyphy: {Functions} for analyzing psychophysical data in {R}}.
+
+\bibitem[Knoblauch and Maloney, 2012]{Knoblauch2012}
+Knoblauch, K. and Maloney, L.~T. (2012).
+\newblock {\em Modeling {Psychophysical} {Data} in {R}}.
+\newblock Springer, New {York}.
+
+\bibitem[Kruschke, 2011]{Kruschke2011a}
+Kruschke, J.~K. (2011).
+\newblock {\em Doing {Bayesian} {Data} {Analysis}}.
+\newblock Academic {Press} / {Elsevier}.
+
+\bibitem[Kwon et~al., 2008]{Kwon2008}
+Kwon, M., Legge, G.~E., Fang, F., Cheong, A., and He, S. (2008).
+\newblock Adaptive changes in visual cortex following prolonged contrast
+  reduction.
+\newblock {\em Journal of {Vision}}, 9(2):20.1--16.
+
+\bibitem[Lee et~al., 2001]{Lee2001}
+Lee, A.~B., Mumford, D., and Huang, J. (2001).
+\newblock Occlusion models for natural images: {A} statistical study of a
+  scale-invariant dead leaves model.
+\newblock {\em International {Journal} of {Computer} {Vision}}, 41(1-2):35--59.
+
+\bibitem[Lee and Wagenmakers, 2014]{Lee2014}
+Lee, M.~D. and Wagenmakers, E.-J. (2014).
+\newblock {\em Bayesian cognitive modeling: {A} practical course}.
+\newblock Cambridge {University} {Press}.
+
+\bibitem[Legge and Foley, 1980]{Legge1980}
+Legge, G.~E. and Foley, J.~M. (1980).
+\newblock Contrast masking in human vision.
+\newblock {\em Journal of the {Optical} {Society} of {America} {A}},
+  70(12):1458--1471.
+
+\bibitem[Lennie and Movshon, 2005]{Lennie2005}
+Lennie, P. and Movshon, J.~A. (2005).
+\newblock Coding of color and form in the geniculostriate visual pathway
+  (invited review).
+\newblock {\em Journal of the {Optical} {Society} of {America} {A}},
+  22(10):2013--2033.
+
+\bibitem[Mante et~al., 2005]{Mante2005}
+Mante, V., Frazor, R.~A., Bonin, V., Geisler, W.~S., and Carandini, M. (2005).
+\newblock Independence of luminance and contrast in natural scenes and in the
+  early visual system.
+\newblock {\em Nature {Neuroscience}}, 8(12):1690--1697.
+
+\bibitem[Mar\'{\i}n, 2014]{Marin2014}
+Mar\'{\i}n, X. F.~i. (2014).
+\newblock {\em \{ggmcmc\}: {Graphical} tools for analyzing {Markov} {Chain}
+  {Monte} {Carlo} simulations from {Bayesian} inference}.
+
+\bibitem[Mark et~al., 2003]{Mark2003}
+Mark, W.~R., Glanville, R.~S., Akeley, K., and Kilgard, M.~J. (2003).
+\newblock Cg: a system for programming graphics hardware in a {C}-like
+  language.
+\newblock In {\em {SIGGRAPH} '03: {ACM} {SIGGRAPH} 2003 papers}, pages
+  896--907, New {York}.
+
+\bibitem[Meese et~al., 2006]{Meese2006}
+Meese, T., Georgeson, M.~A., and Baker, D.~H. (2006).
+\newblock Binocular contrast vision at and above threshold.
+\newblock {\em Journal of {Vision}}, 6(11):1224--1243.
+
+\bibitem[Meese and Georgeson, 2005]{Meese2005}
+Meese, T.~S. and Georgeson, M.~A. (2005).
+\newblock Carving up the {Patchwise} {Transform}: {Towards} a {Filter}
+  {Combination} {Model} for {Spatial} {Vision}.
+\newblock In {\em Advances in {Psychology} {Research}}, volume~34, pages
+  51--88. Nova {Science} {Publishers}, New {York}.
+
+\bibitem[Meese and Holmes, 2002]{Meese2002}
+Meese, T.~S. and Holmes, D.~J. (2002).
+\newblock Adaptation and gain pool summation: alternative models and masking
+  data.
+\newblock {\em Vision {Research}}, 42(9):1113--1125.
+
+\bibitem[Meese and Holmes, 2007]{Meese2007}
+Meese, T.~S. and Holmes, D.~J. (2007).
+\newblock Spatial and temporal dependencies of cross-orientation suppression in
+  human vision.
+\newblock {\em Proceedings of the {Royal} {Society} {B}: {Biological}
+  {Sciences}}, 274(1606):127--136.
+
+\bibitem[Morrone et~al., 1982]{Morrone1982}
+Morrone, M.~C., Burr, D.~C., and Maffei, L. (1982).
+\newblock Functional implications of cross-orientation inhibition of cortical
+  visual cells. {I}. {Neurophysiological} evidence.
+\newblock {\em Proceedings of the {Royal} {Society} of {London}: {B}},
+  216(1204):335--354.
+
+\bibitem[Moscatelli et~al., 2012]{Moscatelli2012}
+Moscatelli, A., Mezzetti, M., and Lacquaniti, F. (2012).
+\newblock Modeling psychophysical data at the population-level: the generalized
+  linear mixed model.
+\newblock {\em Journal of {Vision}}, 12(11).
+
+\bibitem[Nachmias and Sansbury, 1974]{Nachmias1974}
+Nachmias, J. and Sansbury, R. (1974).
+\newblock Letter: {Grating} contrast: discrimination may be better than
+  detection.
+\newblock {\em Vision {Research}}, 14(10):1039--1042.
+
+\bibitem[Oppenheim and Lim, 1981]{OpLi81}
+Oppenheim, A.~V. and Lim, J.~S. (1981).
+\newblock The importance of phase in signals.
+\newblock {\em Proceedings of the IEEE}, 69:529--541.
+
+\bibitem[Papaspiliopoulos et~al., 2007]{Papaspiliopoulos2007}
+Papaspiliopoulos, O., Roberts, G.~O., and Sk\"{o}ld, M. (2007).
+\newblock A {General} {Framework} for the {Parametrization} of {Hierarchical}
+  {Models}.
+\newblock {\em Statistical {Science}}, 22(1):59--73.
+
+\bibitem[Peli, 1990]{Peli1990}
+Peli, E. (1990).
+\newblock Contrast in complex images.
+\newblock {\em Journal of the {Optical} {Society} of {America} {A}},
+  7(10):2032--2040.
+
+\bibitem[Poynton, 2003]{Poyn03}
+Poynton, C. (2003).
+\newblock {\em Digital Video and {HDTV}}.
+\newblock Morgan Kaufmann Publishers, San Francisco, CA, USA.
+
+\bibitem[{R Core Development Team}, 2013]{RCoreDevelopmentTeam2013}
+{R Core Development Team} (2013).
+\newblock {\em R: {A} {Language} and {Environment} for {Statistical}
+  {Computing}}.
+\newblock R {Foundation} for {Statistical} {Computing}, Vienna, {Austria}.
+
+\bibitem[Raftery, 1995]{Raftery1995}
+Raftery, A.~E. (1995).
+\newblock Bayesian model selection in social research {BT} - {Sociological}
+  methodology.
+\newblock In Marsden, P.~V., editor, {\em Sociological methodology}, pages
+  111--196. Blackwell, Cambridge, {MA}.
+
+\bibitem[Reinagel and Zador, 1999]{ReZa99}
+Reinagel, P. and Zador, A.~M. (1999).
+\newblock Natural scene statistics at the centre of gaze.
+\newblock {\em Network: Computation in Neural Systems}, 10:341--350.
+
+\bibitem[Ringach et~al., 1997]{Ringach1997}
+Ringach, D.~L., Hawken, M.~J., and Shapley, R. (1997).
+\newblock Dynamics of orientation tuning in macaque primary visual cortex.
+\newblock {\em Nature}, 387(6630):281--284.
+
+\bibitem[Ringach et~al., 2002]{Ringach2002}
+Ringach, D.~L., Hawken, M.~J., and Shapley, R. (2002).
+\newblock Receptive field structure of neurons in monkey primary visual cortex
+  revealed by stimulation with natural image sequences.
+\newblock {\em Journal of {Vision}}, 2(1):12--24.
+
+\bibitem[Rovamo et~al., 1997]{Rovamo1997}
+Rovamo, J., M\"{a}kel\"{a}, P., N\"{a}s\"{a}nen, R., and Whitaker, D. (1997).
+\newblock Detection of geometric image distortions at various eccentricities.
+\newblock {\em Investigative {Ophthalmology} \& {Visual} {Science}},
+  38(5):1029--1039.
+
+\bibitem[Ruiz and Paradiso, 2012]{RuPa12}
+Ruiz, O. and Paradiso, M.~A. (2012).
+\newblock Macaque {V1} representations in natural and reduced visual contexts:
+  spatial and temporal properties and influence of saccadic eye movements.
+\newblock {\em J Neurophysiol}, 108(1):324--333.
+
+\bibitem[Sadr and Sinha, 2004]{SaSi04}
+Sadr, J. and Sinha, P. (2004).
+\newblock Object recognition and {R}andom {I}mage {S}tructure {E}volution.
+\newblock {\em Cognitive Science}, 28:259--87.
+
+\bibitem[Schwarz, 1978]{Schwarz1978}
+Schwarz, G. (1978).
+\newblock Estimating the dimension of a model.
+\newblock {\em The annals of statistics}, 6(2):461--464.
+
+\bibitem[Simoncelli, 1997]{Simo97}
+Simoncelli, E.~P. (1997).
+\newblock Statistical models for images: Compression, restoration and
+  synthesis.
+\newblock In {\em Proc 31st Asilomar Conf on Signals, Systems and Computers},
+  volume~1, pages 673--8. IEEE Computer Press.
+
+\bibitem[Sing et~al., 2005]{Sing2005}
+Sing, T., Sander, O., Beerenwinkel, N., and Lengauer, T. (2005).
+\newblock {ROCR}: visualizing classifier performance in {R}.
+\newblock {\em Bioinformatics}, 21(20):3940--3941.
+
+\bibitem[Sinz and Bethge, 2013]{Sinz2013}
+Sinz, F. and Bethge, M. (2013).
+\newblock Temporal {Adaptation} {Enhances} {Efficient} {Contrast} {Gain}
+  {Control} on {Natural} {Images}.
+\newblock {\em {PLoS} {Computational} {Biology}}, 9(1):e1002889.
+
+\bibitem[Solomon, 2009]{Solomon2009}
+Solomon, J.~A. (2009).
+\newblock The history of dipper functions.
+\newblock {\em Attention, perception \& psychophysics}, 71(3):435--443.
+
+\bibitem[{Stan Development Team}, 2014]{StanDevelopmentTeam2014}
+{Stan Development Team} (2014).
+\newblock Stan {Modeling} {Language} {Users} {Guide} and {Reference} {Manual},
+  {Version} 2.2.
+\newblock Technical report.
+
+\bibitem[Stromeyer and Klein, 1974]{Stromeyer1974}
+Stromeyer, C.~F. and Klein, S. (1974).
+\newblock Spatial frequency channels in human vision as asymmetric (edge)
+  mechanisms.
+\newblock {\em Vision {Research}}, 14(12):1409--1420.
+
+\bibitem[Thomson, 1999]{Thomson1999}
+Thomson, M.~G. (1999).
+\newblock Visual coding and the phase structure of natural scenes.
+\newblock {\em Network: {Computation} in {Neural} {Systems}}, 10(2):123--132.
+
+\bibitem[Tka\v{c}ik et~al., 2011]{Tkacik2011}
+Tka\v{c}ik, G., Garrigan, P., Ratliff, C., Mil\v{c}inski, G., Klein, J.~M.,
+  Seyfarth, L.~H., Sterling, P., Brainard, D.~H., and Balasubramanian, V.
+  (2011).
+\newblock Natural {Images} from the {Birthplace} of the {Human} {Eye}.
+\newblock {\em {PLoS} {ONE}}, 6(6):e20409.
+
+\bibitem[Tolhurst and Tadmor, 1997]{Tolhurst1997}
+Tolhurst, D.~J. and Tadmor, Y. (1997).
+\newblock Band-{Limited} {Contrast} in {Natural} {Images} {Explains} the
+  {Detectability} of {Changes} in the {Amplitude} {Spectra}.
+\newblock {\em Vision {Research}}, 37(23):3203--3215.
+
+\bibitem[van Hateren and Ruderman, 1998]{HaRu98}
+van Hateren, J.~H. and Ruderman, D.~L. (1998).
+\newblock Independent component analysis of natural image sequences yields
+  spatio-temporal filters similar to simple cells in primary visual cortex.
+\newblock {\em Proceedings of the Royal Society of London. Series B: Biological
+  Sciences}, 265(1412):2315--2320.
+
+\bibitem[Vig et~al., 2012]{ViDoMaBa12}
+Vig, E., Dorr, M., Martinetz, T., and Barth, E. (2012).
+\newblock Intrinsic dimensionality predicts the saliency of natural dynamic
+  scenes.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  34(6):1080--1091.
+
+\bibitem[Vogels, 1999]{Vogels1999}
+Vogels, R. (1999).
+\newblock Effect of image scrambling on inferior temporal cortical responses.
+\newblock {\em {NeuroReport}}, 10(9).
+
+\bibitem[Wallis and Bex, 2012]{Wallis2012}
+Wallis, T. S.~A. and Bex, P.~J. (2012).
+\newblock Image correlates of crowding in natural scenes.
+\newblock {\em Journal of {Vision}}, 12(7):1--19,6.
+
+\bibitem[Wang et~al., 2012]{Wang2012a}
+Wang, H.~X., Freeman, J., Merriam, E.~P., Hasson, U., and Heeger, D.~J. (2012).
+\newblock Temporal eye movement strategies during naturalistic viewing.
+\newblock {\em Journal of {Vision}}, 12(1):16.
+
+\bibitem[Watson and Ahumada, 2005]{Watson2005}
+Watson, A.~B. and Ahumada, A.~J. (2005).
+\newblock A standard model for foveal detection of spatial contrast.
+\newblock {\em Journal of {Vision}}, 5(9).
+
+\bibitem[Watson and Solomon, 1997]{Watson1997}
+Watson, A.~B. and Solomon, J.~A. (1997).
+\newblock Model of visual contrast gain control and pattern masking.
+\newblock {\em Journal of the {Optical} {Society} of {America} {A}},
+  14(9):2379--2391.
+
+\bibitem[Wichmann, 1999]{Wichmann1999}
+Wichmann, F. (1999).
+\newblock {\em Some {Aspects} of {Modelling} {Human} {Spatial} {Vision}:
+  {Contrast} {Discrimination}}.
+\newblock PhD thesis, University of {Oxford}.
+
+\bibitem[Wichmann et~al., 2006]{WiBrGe06}
+Wichmann, F.~A., Braun, D.~I., and Gegenfurtner, K.~R. (2006).
+\newblock Phase noise and the classification of natural images.
+\newblock {\em Vision Research}, 46:1520--9.
+
+\bibitem[Wood, 2011]{Wood2011}
+Wood, S.~N. (2011).
+\newblock Fast stable restricted maximum likelihood and marginal likelihood
+  estimation of semiparametric generalized linear models.
+\newblock {\em Journal of the {Royal} {Statistical} {Society}: {Series} {B}
+  ({Statistical} {Methodology})}, 73(1):3--36.
+
+\bibitem[Yu et~al., 2003]{Yu2003}
+Yu, C., Klein, S.~A., and Levi, D.~M. (2003).
+\newblock Cross-and iso-oriented surrounds modulate the contrast response
+  function: {The} effect of surround contrast.
+\newblock {\em Journal of {Vision}}, 3(8):1.
+
+\bibitem[Zetzsche and Barth, 1990]{Zetzsche1990}
+Zetzsche, C. and Barth, E. (1990).
+\newblock Fundamental limits of linear filters in the visual processing of
+  two-dimensional signals.
+\newblock {\em Vision {Research}}, 30(7):1111--1117.
+
+\bibitem[Zetzsche et~al., 1993]{ZeBaWe93a}
+Zetzsche, C., Barth, E., and Wegmann, B. (1993).
+\newblock The importance of intrinsically two-dimensional image features in
+  biological vision and picture coding.
+\newblock In Watson, A.~B., editor, {\em Digital Images and Human Vision},
+  pages 109--38. MIT Press.
+
+\end{thebibliography}
