@@ -1,19 +1,19 @@
 # Detection of gaze-contingent contrast increments in natural image movies
 
-These are R scripts to reproduce the analyses in Wallis, Dorr & Bex (submitted).
+These are R scripts to reproduce the analyses in Wallis, Dorr & Bex (in press).
 
 These files are released under the GPL-3 License. I don't offer any support. You are welcome to send me an email but I make no claim that I will (be able to) help, particularly if you are attempting to use a different platform or setup than mine (I'm running on OSX 10.9 with RStudio; the MCMC sampling was conducted on a Debian distribution).
 
 **IMPORTANT**: If you adapt any part of these scripts for your own academic work, please help keep me employed by citing the following paper:
 
-Wallis, T.S.A., Dorr, M.A.C., and Bex, P.J. (submitted). Sensitivity to gaze-contingent contrast increments in naturalistic movies: An exploratory report.
+Wallis, T.S.A., Dorr, M.A.C., and Bex, P.J. (in press). Sensitivity to gaze-contingent contrast increments in naturalistic movies: An exploratory report. *Journal of Vision*.
 
 ## Subdirectories in this repository
 
 The main file is `analysis_master.R` in the parent directory. Use this as a guide to follow all the analyses.
 
 Other directories are:
-  * /output/ will contain all data used for analysis, once the paper is accepted.
+  * /output/ contains data used for analysis. These are currently distributed as R binaries to reduce file size, but if you want .csv files let me know.
   * /funs/ contains all scripts and functions to produce the analysis and figures. There are also a bunch of legacy functions included for completeness that were not used in the final paper, and may no longer run.
 
 
