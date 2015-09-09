@@ -6,7 +6,7 @@ These files are released under the GPL-3 License. I don't offer any support. You
 
 **IMPORTANT**: If you adapt any part of these scripts for your own academic work, please help keep me employed by citing the following paper:
 
-Wallis, T.S.A., Dorr, M.A.C., and Bex, P.J. (in press). Sensitivity to gaze-contingent contrast increments in naturalistic movies: An exploratory report. *Journal of Vision*.
+Wallis, T. S. A., Dorr, M., & Bex, P. J. (2015). Sensitivity to gaze-contingent contrast increments in naturalistic movies: An exploratory report and model comparison. *Journal of Vision, 15*(8), 3. http://doi.org/10.1167/15.8.3
 
 ## Subdirectories in this repository
 
