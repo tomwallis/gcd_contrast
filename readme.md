@@ -1,5 +1,7 @@
 # Detection of gaze-contingent contrast increments in natural image movies
 
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.32778.svg)](http://dx.doi.org/10.5281/zenodo.32778)
+
 These are R scripts to reproduce the analyses in Wallis, Dorr & Bex (in press).
 
 These files are released under the GPL-3 License. I don't offer any support. You are welcome to send me an email but I make no claim that I will (be able to) help, particularly if you are attempting to use a different platform or setup than mine (I'm running on OSX 10.9 with RStudio; the MCMC sampling was conducted on a Debian distribution).
